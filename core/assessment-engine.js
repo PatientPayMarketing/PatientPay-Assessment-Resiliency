@@ -2169,21 +2169,101 @@ function generateCSV(exportData) {
 // WEBHOOK
 // ============================================
 const WebhookConfig = {
-  url: '', // Make.com webhook URL — to be set by user
-  enabled: false,
+  url: 'https://hook.us2.make.com/ckyrhu7579yic1jlrnsxsmnv6s86qmtl',
+  enabled: true,
 };
 
-async function sendWebhook(data) {
+/**
+ * Send assessment completion data to Make.com webhook
+ * Called with (formData, answers, scores, source) from the UI
+ */
+async function sendWebhook(formData, answers, scores, source) {
   if (!WebhookConfig.enabled || !WebhookConfig.url) {
     console.log('Webhook not configured — skipping send');
     return { success: false, reason: 'not_configured' };
   }
+
+  // Build comprehensive payload for Make.com
+  const insights = calculateInsights(formData, answers);
+  const recommendations = getActionableRecommendations(answers, scores, insights);
+  const projections = calculatePatientPayProjections(answers, scores);
+  const resiliency = calculateResiliencyIndex(answers, scores);
+  const segment = answers['practice_type'] || 'PP';
+  const practiceLabel = PracticeTypes[segment]?.label || 'Practice';
+
+  const payload = {
+    // Metadata
+    timestamp: new Date().toISOString(),
+    source: source || 'assessment',
+    version: '2.1',
+
+    // Respondent info
+    respondent: {
+      name: formData.name || `${formData.firstName || ''} ${formData.lastName || ''}`.trim() || '',
+      email: formData.email || '',
+      organization: formData.organization || formData.facilityName || '',
+      practiceType: segment,
+      practiceTypeLabel: practiceLabel,
+    },
+
+    // Resiliency Index (hero metric)
+    resiliencyIndex: {
+      index: resiliency.index,
+      level: resiliency.level,
+      projectedIndex: resiliency.projectedIndex,
+      projectedImprovement: resiliency.projectedImprovement,
+      mostVulnerable: resiliency.mostVulnerable?.name || '',
+      mostProtected: resiliency.mostProtected?.name || '',
+      forces: resiliency.forces.map(f => ({
+        name: f.name,
+        exposure: f.amplifiedExposure,
+        level: f.level,
+        weight: Math.round(f.weight * 100) + '%',
+      })),
+    },
+
+    // Scores
+    scores: {
+      overall: scores.overall,
+      level: getScoreLevel(scores.overall),
+      revenueCycleResilience: scores.categories[0],
+      patientPaymentExperience: scores.categories[1],
+      competitivePosition: scores.categories[2],
+    },
+
+    // Financial insights
+    financials: {
+      annualBilling: insights.annualBilling || 0,
+      arDays: insights.arDays || 0,
+      cashInAR: insights.cashInAR || 0,
+      currentBadDebt: insights.currentBadDebt || 0,
+      totalFinancialOpportunity: insights.totalFinancialOpportunity || 0,
+      projectedARDays: insights.projectedARDays || 0,
+      cashFreedByARReduction: insights.cashFreedByARReduction || 0,
+      badDebtSavings: insights.badDebtSavings || 0,
+    },
+
+    // PatientPay projections
+    projections: {
+      currentOverall: projections.current?.overall || scores.overall,
+      projectedOverall: projections.projected?.overall || scores.overall,
+      overallImprovement: projections.overallImprovement || 0,
+    },
+
+    // Top recommendations
+    topRecommendations: recommendations.slice(0, 5).map(r => r.title),
+
+    // Raw answers for detailed analysis
+    answers,
+  };
+
   try {
     const response = await fetch(WebhookConfig.url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
+    console.log('Webhook sent:', response.ok ? 'success' : 'failed', response.status);
     return { success: response.ok, status: response.status };
   } catch (error) {
     console.error('Webhook error:', error);
