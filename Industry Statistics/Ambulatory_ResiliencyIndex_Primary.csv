@@ -1,114 +1,167 @@
 Category,Sub_Industry,Metric_Type,Statistic,Value,Context,Year,Source,Data_Confidence,Notes,URL
-Patient Payment Preferences,Cross-Industry,Digital Adoption,U.S. consumers using digital payments,92%,All-time high for digital payment adoption,2024,Federal Reserve / McKinsey,High,Includes all forms of digital payments,
-Patient Payment Preferences,Cross-Industry,Digital Adoption,Consumers preferring to pay medical bills online,73%,Preference for online bill pay over mail/phone,2024-2025,J.P. Morgan Healthcare Payments Report,High,,
-Patient Payment Preferences,Cross-Industry,Digital Adoption,Consumers comfortable with digital healthcare payments (all ages),80%,Across all age groups,2024,TrustCommerce Healthcare Payment Trends,High,,
-Patient Payment Preferences,Cross-Industry,Digital Adoption,Adults 60+ comfortable with digital healthcare payments,58.75%,Older adult segment specifically,2024,TrustCommerce Healthcare Payment Trends,High,Contradicts stereotype of tech-averse seniors,
-Patient Payment Preferences,Cross-Industry,Payment Method,Credit card preference at time of service,45.75%,Most preferred payment method,2024,TrustCommerce Healthcare Payment Trends,High,,
-Patient Payment Preferences,Cross-Industry,Payment Method,Debit card preference at time of service,38.75%,Second most preferred payment method,2024,TrustCommerce Healthcare Payment Trends,High,,
-Patient Payment Preferences,Cross-Industry,Payment Method,Cash preference at time of service,6.75%,Declining share,2024,TrustCommerce Healthcare Payment Trends,Medium,,
-Patient Payment Preferences,Cross-Industry,Payment Method,Digital wallet preference at time of service,6.5%,Growing share,2024,TrustCommerce Healthcare Payment Trends,High,,
-Patient Payment Preferences,Cross-Industry,Payment Method,Check preference at time of service,2.25%,Rapidly declining,2024,TrustCommerce Healthcare Payment Trends,High,,
-Patient Payment Preferences,Cross-Industry,Digital Wallet,U.S. consumers using digital wallet in past 90 days,48%,12 percentage point increase YoY,2024-2025,McKinsey Digital Payments,High,,
-Patient Payment Preferences,Cross-Industry,Digital Wallet,Digital wallet transaction growth projection (2024-2029),73%,Global projection,2024,McKinsey / Worldpay,High,,
-Patient Payment Preferences,Cross-Industry,Use Case,Digital payment usage for doctor/specialist visits,62.5%,,2024,TrustCommerce,High,,
-Patient Payment Preferences,Cross-Industry,Use Case,Digital payment usage for prescriptions,59.5%,,2024,TrustCommerce,High,,
-Patient Payment Preferences,Cross-Industry,Payment Plans,Consumers wanting payment plans/installments for unexpected expenses,77%,,2024,J.P. Morgan Healthcare Payments,High,,
-Patient Payment Preferences,Cross-Industry,Friction Impact,Patients who missed medical bills due to complicated payment systems,37%,,2024,J.P. Morgan Healthcare Payments,High,Key friction statistic,
-Patient Payment Preferences,Cross-Industry,Friction Impact,Insured patients who delayed/skipped recommended care due to cost,43%,,2024-2025,KFF / J.P. Morgan,High,,
-Patient Payment Preferences,Cross-Industry,Consolidation,Patients less likely to miss payments if expenses accessible in one place,72%,,2024,J.P. Morgan Healthcare Payments,High,,
-Provider Billing Adoption,Cross-Industry,Digital Maturity,Organizations with 5+ years online bill pay reporting increased patient adoption,94%,,2024,TrustCommerce,High,Proves ROI of early digital adoption,
-Provider Billing Adoption,Cross-Industry,Channel Mix,Using patient portals as primary billing channel,71%,,2024,TrustCommerce,High,,
-Provider Billing Adoption,Cross-Industry,Channel Mix,Using email for billing,67%,,2024,TrustCommerce,High,,
-Provider Billing Adoption,Cross-Industry,Channel Mix,Using text messaging for billing,60%,,2024,TrustCommerce,High,,
-Provider Billing Adoption,Cross-Industry,Offerings,Organizations offering payment plans,69%,,2024,TrustCommerce,High,,
-Provider Billing Adoption,Cross-Industry,Priority,Providers identifying updating billing systems as key priority,80%,Includes expanding payment options,2024-2025,TrustCommerce / J.P. Morgan,High,,
-Provider Billing Adoption,Cross-Industry,Challenge,Providers struggling to implement flexible payment solutions,68%,,2024,TrustCommerce,Medium,,
-Provider Billing Adoption,Cross-Industry,Challenge,Providers reporting difficulty strengthening network security,77%,,2024,TrustCommerce,Medium,,
-Provider Billing Adoption,Cross-Industry,Collection Timing,Providers taking 30+ days to collect after patient encounter,71%,,2024,Kodiak Solutions,High,,
-Revenue Cycle,Physical Therapy,AR Days,Optimal AR days benchmark,<35 days,Range 20-40 days depending on state,2024,WebPT / APTA,High,"States with EDI regulations (WA, MN) achieve ~20 days",
-Revenue Cycle,Physical Therapy,AR Days,AR days with EDI-mandated states,~20 days,Washington and Minnesota examples,2024,Industry Research,Medium,EDI regulations drive faster processing,
-Revenue Cycle,Physical Therapy,Collection Rate,Net collection rate target,95%+,Optimal benchmark,2024,WebPT,High,Below 90% indicates billing problems,
-Revenue Cycle,Physical Therapy,Aged AR,A/R >120 days target,<25%,Of total claims receivable,2024,WebPT / Clinicient,High,,
-Revenue Cycle,Physical Therapy,Point of Service,Copay collection at date of service target,90%+,,2024,WebPT,High,Critical for PT cash flow,
-Revenue Cycle,Physical Therapy,Claim Speed,AR reduction from submitting claims within 24-48 hours,Up to 40%,,2024,WebPT,High,,
-Revenue Cycle,Private Practice,AR Days,Optimal AR days benchmark,30-40 days,,2024,MGMA / AAFP,High,>50 days indicates financial trouble,
-Revenue Cycle,Private Practice,AR Days,Maximum acceptable AR days,<50 days,Beyond this indicates significant issues,2024,MGMA,High,,
-Revenue Cycle,Private Practice,Collection Rate,Net collection rate minimum,95%,,2024,MGMA,High,97-99% is optimal,
-Revenue Cycle,Private Practice,Collection Rate,Optimal net collection rate,97-99%,Best practice target,2024,MGMA,High,,
-Revenue Cycle,Private Practice,Bad Debt,Bad debt target,<3%,Of total expected collections,2024,MGMA / AAFP,High,,
-Revenue Cycle,Private Practice,Aged AR,A/R >90 days target,<10-15%,Of total A/R,2024,MGMA,High,,
-Revenue Cycle,Private Practice,Denial Rate,Optimal denial rate,<5%,,2024,MGMA,High,5-10% is industry average,
-Revenue Cycle,Private Practice,Denial Rate,Industry average denial rate,5-10%,,2024,MGMA,Medium,,
-Revenue Cycle,Mental/Behavioral Health,AR Days,Average AR days (2025),65-75 days,Up from 50-55 days in 2024,2025,Behavioral Health Billing Research,Medium,Significant deterioration YoY,
-Revenue Cycle,Mental/Behavioral Health,AR Days,Optimal AR days target,<30 days,Best practice benchmark,2024-2025,Industry Benchmarks,High,,
-Revenue Cycle,Mental/Behavioral Health,Denial Rate,Optimal denial rate with specialized services,<5%,,2024,Behavioral Health Billing Studies,Medium,,
-Revenue Cycle,Mental/Behavioral Health,Collection Impact,Collection increase with professional billing services,15-25%,,2024,Behavioral Health Billing Studies,Medium,,
-Revenue Cycle,Mental/Behavioral Health,Appeals,Appeal success rate for mental health claims,54%,vs 38% average for all claim types,2024,Industry Research,Medium,,
-Revenue Cycle,Mental/Behavioral Health,Appeals,Denied claims that are actually appealed,<1%,Massive missed revenue opportunity,2024,Industry Research,Medium,,
-Revenue Cycle,Mental/Behavioral Health,First Pass,First-pass resolution rate target,90%+,,2024,Industry Benchmarks,High,,
-Revenue Cycle,Urgent Care,Clean Claims,Clean claim rate best practice,>95%,,2024,Industry Benchmarks,High,,
-Revenue Cycle,Urgent Care,Denial Rate,Average denial rate across healthcare,10%,,2024,Industry Research,High,<4% for top performers,
-Revenue Cycle,Urgent Care,Denial Rate,Top performer denial rate,<4%,,2024,Industry Research,High,,
-Revenue Cycle,Urgent Care,First Pass,First-pass resolution rate standard,95%+,Industry standard,2024,Industry Benchmarks,High,,
-Revenue Cycle,Urgent Care,Resubmission Cost,Cost per resubmitted claim,$25-$118,Administrative time cost,2024,Industry Research,Medium,,
-Revenue Cycle,Critical Access Hospital,AR Days,U.S. median AR days,52.24 days,2010 CAH median (most recent benchmark available),2010,Flex Monitoring Team,Medium,Limited recent benchmarking data for CAHs,
-Revenue Cycle,Critical Access Hospital,Operating Margin,Total margin range,negative 20.5% to 28.0%,Wide variation across CAHs,2022-2023,Flex Monitoring Team,High,,
-Revenue Cycle,Critical Access Hospital,Bad Debt,Bad debt write-off timing,120-140 days from discharge,Standard practice,2024,Industry Practice,Medium,,
-Revenue Cycle,Critical Access Hospital,Reimbursement,Medicare cost-based reimbursement rate,101%,Of allowable costs,2024,CMS / MedPAC,High,Key CAH financial feature,
-Revenue Cycle,Community Hospital,AR Days,AR days trend (YoY increase),2.2% YoY increase,October 2024; 5.4% YTD,2024,Kodiak Solutions,High,AR days worsening,
-Revenue Cycle,Community Hospital,Bad Debt,Industry standard bad debt rate,2-3%,Of net patient revenue,2024,Industry Benchmarks,High,>5% raises alarms,
-Revenue Cycle,Community Hospital,Denial Rate,Initial denial rate,11.8%,Up from 11.5% in 2023,2024,Kodiak Solutions,High,,
-Revenue Cycle,Community Hospital,Denial Trend,Request-for-information denial increase (inpatient commercial),17%,Year-over-year increase,2024,Kodiak Solutions,High,,
-Revenue Cycle,Community Hospital,Patient Collections,Patient collection rate from commercially insured,34.4%,Down from 37.6% in 2023,2024,Kodiak Solutions,High,Declining patient collections,
-Revenue Cycle,Community Hospital,Patient Collections,Patient repayment rate (pre-COVID baseline),~54%,Jan 2018 to Feb 2020,2020,JAMA Health Forum,High,Declining in recent years,
-Revenue Cycle,Community Hospital,Operating Margin,Median operating margin projected,0.8-2%,For 2025,2025,Fitch Ratings,High,Razor-thin margins,
-Revenue Cycle,Ambulatory Surgery Center,Ownership,For-profit entities,95.3%,,2024,MedPAC,High,,
-Revenue Cycle,Ambulatory Surgery Center,Reimbursement,Medicare conversion factor CY2025,$54.895,For ASCs meeting quality reporting,2025,CMS,High,,
-Revenue Cycle,Ambulatory Surgery Center,Reimbursement,2025 payment update,2.9%,Annual increase,2025,CMS,High,,
-Revenue Cycle,Fertility Clinic,Treatment Cycles,Patients requiring >1 cycle,70%+,For successful outcome,2024,Fertility Bridge / AJMC,High,,
-Revenue Cycle,Fertility Clinic,Coverage,Americans with insurance covering IVF,25%,,2024,AJMC,High,75% have no IVF coverage,
-Revenue Cycle,Fertility Clinic,Cost,Average IVF cycle cost,"$15,000-$30,000","Per cycle; can exceed $30,000",2024,Fertility Bridge / AJMC,High,,
-Revenue Cycle,Fertility Clinic,Cost,Average cycles needed for pregnancy,2.5,,2024,Industry Research,Medium,Total costs can exceed $40-60K,
-Revenue Cycle,Fertility Clinic,Patient OOP,Average out-of-pocket cost per person over 18 months,"$24,000+",,2024,Industry Research,Medium,,
-Revenue Cycle,Fertility Clinic,Patient OOP,Average OOP for successful IVF pregnancy,"$61,000+",,2024,Industry Research,Medium,,
-Revenue Cycle,Fertility Clinic,Reimbursement,Reimbursement rate from insurance/carve-outs,~50%,Of billed rates,2024,Industry Research,Medium,,
-Revenue Cycle,Fertility Clinic,Coverage Trend,Organizations offering IVF coverage,32%,Up from 13% in 2016,2024,KFF / AJMC,High,Growing but still minority,
-Revenue Cycle,Fertility Clinic,Payment Model,Predominant payment model,Upfront/bundled,Bundled pricing common; upfront required,2024,Fertility Bridge,Medium,,
-Insurance Trends,Cross-Industry,HDHP Enrollment,HDHP/SO enrollment (2024),27%,Of covered workers,2024,KFF Employer Health Benefits Survey,High,,
-Insurance Trends,Cross-Industry,HDHP Enrollment,HDHP/SO enrollment (2025),33%,Of covered workers; significant increase from 27% in 2024,2025,KFF Employer Health Benefits Survey,High,Major shift toward HDHPs,
-Insurance Trends,Cross-Industry,Plan Distribution,PPO enrollment (2025),46%,Most common plan type,2025,KFF,High,,
-Insurance Trends,Cross-Industry,Plan Distribution,HMO enrollment (2025),12%,,2025,KFF,High,,
-Insurance Trends,Cross-Industry,Plan Distribution,POS enrollment (2025),9%,,2025,KFF,High,,
-Insurance Trends,Cross-Industry,HDHP Limits 2025,Minimum deductible (individual),"$1,650",,2025,IRS,High,,
-Insurance Trends,Cross-Industry,HDHP Limits 2025,Minimum deductible (family),"$3,300",,2025,IRS,High,,
-Insurance Trends,Cross-Industry,HDHP Limits 2025,Maximum OOP (individual),"$8,300",,2025,IRS,High,,
-Insurance Trends,Cross-Industry,HDHP Limits 2025,Maximum OOP (family),"$16,600",,2025,IRS,High,,
-Insurance Trends,Cross-Industry,HDHP Limits 2026,Minimum deductible (individual),"$1,700",,2026,IRS,High,,
-Insurance Trends,Cross-Industry,HDHP Limits 2026,Maximum OOP (individual),"$8,500",,2026,IRS,High,,
-Insurance Trends,Cross-Industry,HDHP Limits 2026,Maximum OOP (family),"$17,000",,2026,IRS,High,,
-Insurance Trends,Cross-Industry,Deductible,Average deductible for single coverage,"$1,886",,2025,KFF,High,"Up 17% over 5 years, 43% over decade",
-Insurance Trends,Cross-Industry,Deductible,"Workers with deductible >= $2,000 (single)",34%,Of covered workers,2025,KFF,High,,
-Insurance Trends,Cross-Industry,Patient Liability,Average patient liability (private insurance),$375.41,Per encounter/claim,2024,Kodiak Solutions,Medium,,
-Insurance Trends,Cross-Industry,Patient Liability,Average patient liability (Medicare Advantage),$172.50,Per encounter/claim,2024,Kodiak Solutions,Medium,,
-Employer Benefits,Cross-Industry,Premium,Average single coverage premium,"$9,325",Up 5% from 2024,2025,KFF,High,,
-Employer Benefits,Cross-Industry,Premium,Average family coverage premium,"$26,993",Up 6% from 2024,2025,KFF,High,,
-Employer Benefits,Cross-Industry,Contribution,Worker contribution for single coverage,"16% ($1,440)",,2025,KFF,High,,
-Employer Benefits,Cross-Industry,Contribution,Worker contribution for family coverage,"26% ($6,850)",,2025,KFF,High,,
-Employer Benefits,Cross-Industry,Self-Funding,Workers in self-funded plans,67%,"27% small firms, 80% large firms",2025,KFF,High,,
-Employer Benefits,Cross-Industry,Coverage,All workers covered by employer health plans,55%,,2025,KFF,High,,
-Employer Benefits,Cross-Industry,Eligibility,Workers eligible for benefits at offering firms,80%,76% of eligible workers enroll,2025,KFF,High,,
-Revenue Cycle,Cross-Industry,AR Days,General AR days range,30-50 days,Varies by payer mix/specialty,2024,Industry Benchmarks,High,<40 days for physician practices,
-Revenue Cycle,Cross-Industry,Aged AR,A/R >90 days optimal,<15-20%,Of total A/R,2024,MGMA,High,,
-Revenue Cycle,Cross-Industry,Bad Debt,Industry standard bad debt,2-3%,<5% acceptable,2024,Industry Benchmarks,High,,
-Revenue Cycle,Cross-Industry,Clean Claims,Clean claim rate target,>95%,,2024,Industry Benchmarks,High,,
-Revenue Cycle,Cross-Industry,Denial Rate,Industry average denial rate,5-10%,<5% optimal,2024,Industry Benchmarks,High,,
-Revenue Cycle,Cross-Industry,Collection Rate,Net collection rate minimum,95%,97-99% optimal,2024,MGMA,High,,
-Revenue Cycle,Cross-Industry,Cost to Collect,Cost to collect target,<$0.05-$0.07,Per dollar of revenue,2024,Industry Benchmarks,Medium,,
-Revenue Cycle,Cross-Industry,Point of Service,Point-of-service collections YoY increase,13.1%,October 2024,2024,Kodiak Solutions,High,Positive trend,
-Denial Trends,Cross-Industry,Rate,Initial denial rate (2024),11.8%,Up from 11.5% in 2023,2024,Kodiak Solutions,High,,
-Denial Trends,Cross-Industry,Volume,Denied amounts increase (inpatient),6.9%,YoY 2024 vs 2023,2024,Kodiak Solutions,High,,
-Denial Trends,Cross-Industry,Volume,Denied amounts increase (outpatient),4.8%,YoY 2024 vs 2023,2024,Kodiak Solutions,High,,
-Denial Trends,Cross-Industry,Type,Medical necessity/lack of info denial increase (inpatient),148%,,2024,Kodiak Solutions,High,Dramatic increase,
-Denial Trends,Cross-Industry,Type,Medical necessity/lack of info denial increase (outpatient),84%,,2024,Kodiak Solutions,High,,
-Denial Trends,Cross-Industry,Security,Average cost of healthcare data breach,$9.8 million,,2024,IBM / Ponemon,High,,
-Denial Trends,Cross-Industry,Credit,Medical debt banned from credit reports,January 2025,All medical debt,2025,CFPB,High,Previous partial removal started July 2022,
+Patient Payment Preferences,Cross-Industry,Digital Adoption,U.S. consumers using digital payments,92%,All-time high for digital payment adoption,2024,Federal Reserve / McKinsey,High,Includes all forms of digital payments,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Digital Adoption,Consumers preferring to pay medical bills online,73%,Preference for online bill pay over mail/phone,2024-2025,J.P. Morgan Healthcare Payments Report,High,,https://www.jpmorgan.com/payments/newsroom/healthcare-payments-trends-report-2025
+Patient Payment Preferences,Cross-Industry,Digital Adoption,Consumers comfortable with digital healthcare payments (all ages),80%,Across all age groups,2024,TrustCommerce Healthcare Payment Trends,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Digital Adoption,Adults 60+ comfortable with digital healthcare payments,58.75%,Older adult segment specifically,2024,TrustCommerce Healthcare Payment Trends,High,Contradicts stereotype of tech-averse seniors,https://trustcommerce.com/survey-nearly-60-of-americans-aged-60-comfortable-using-digital-payments-for-healthcare/
+Patient Payment Preferences,Cross-Industry,Payment Method,Credit card preference at time of service,45.75%,Most preferred payment method,2024,TrustCommerce Healthcare Payment Trends,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Payment Method,Debit card preference at time of service,38.75%,Second most preferred payment method,2024,TrustCommerce Healthcare Payment Trends,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Payment Method,Cash preference at time of service,6.75%,Declining share,2024,TrustCommerce Healthcare Payment Trends,Medium,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Payment Method,Digital wallet preference at time of service,6.5%,Growing share,2024,TrustCommerce Healthcare Payment Trends,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Payment Method,Check preference at time of service,2.25%,Rapidly declining,2024,TrustCommerce Healthcare Payment Trends,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Digital Wallet,U.S. consumers using digital wallet in past 90 days,48%,12 percentage point increase YoY,2024-2025,McKinsey Digital Payments,High,,https://hostmerchantservices.com/2025/03/payment-trends-in-healthcare/
+Patient Payment Preferences,Cross-Industry,Digital Wallet,Digital wallet transaction growth projection (2024-2029),73%,Global projection,2024,McKinsey / Worldpay,High,,https://hostmerchantservices.com/2025/03/payment-trends-in-healthcare/
+Patient Payment Preferences,Cross-Industry,Use Case,Digital payment usage for doctor/specialist visits,62.5%,,2024,TrustCommerce,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Use Case,Digital payment usage for prescriptions,59.5%,,2024,TrustCommerce,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Patient Payment Preferences,Cross-Industry,Payment Plans,Consumers wanting payment plans/installments for unexpected expenses,77%,,2024,J.P. Morgan Healthcare Payments,High,,https://www.jpmorgan.com/payments/newsroom/healthcare-payments-trends-report-2025
+Patient Payment Preferences,Cross-Industry,Friction Impact,Patients who missed medical bills due to complicated payment systems,37%,,2024,J.P. Morgan Healthcare Payments,High,Key friction statistic,https://www.jpmorgan.com/payments/newsroom/healthcare-payments-trends-report-2025
+Patient Payment Preferences,Cross-Industry,Friction Impact,Insured patients who delayed/skipped recommended care due to cost,43%,,2024-2025,KFF / J.P. Morgan,High,,https://www.jpmorgan.com/payments/newsroom/healthcare-payments-trends-report-2025
+Patient Payment Preferences,Cross-Industry,Consolidation,Patients less likely to miss payments if expenses accessible in one place,72%,,2024,J.P. Morgan Healthcare Payments,High,,https://www.jpmorgan.com/payments/newsroom/healthcare-payments-trends-report-2025
+Provider Billing Adoption,Cross-Industry,Digital Maturity,Organizations with 5+ years online bill pay reporting increased patient adoption,94%,,2024,TrustCommerce,High,Proves ROI of early digital adoption,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Provider Billing Adoption,Cross-Industry,Channel Mix,Using patient portals as primary billing channel,71%,,2024,TrustCommerce,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Provider Billing Adoption,Cross-Industry,Channel Mix,Using email for billing,67%,,2024,TrustCommerce,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Provider Billing Adoption,Cross-Industry,Channel Mix,Using text messaging for billing,60%,,2024,TrustCommerce,High,,https://trustcommerce.com/digital-payment-evolution-reshapes-healthcare-financial-landscape/
+Provider Billing Adoption,Cross-Industry,Offerings,Organizations offering payment plans,69%,,2024,TrustCommerce,High,,https://trustcommerce.com/the-new-patient-priority-why-healthcare-payment-flexibility-is-no-longer-optional/
+Provider Billing Adoption,Cross-Industry,Priority,Providers identifying updating billing systems as key priority,80%,Includes expanding payment options,2024-2025,TrustCommerce / J.P. Morgan,High,,https://trustcommerce.com/the-new-patient-priority-why-healthcare-payment-flexibility-is-no-longer-optional/
+Provider Billing Adoption,Cross-Industry,Challenge,Providers struggling to implement flexible payment solutions,68%,,2024,TrustCommerce,Medium,,https://trustcommerce.com/the-new-patient-priority-why-healthcare-payment-flexibility-is-no-longer-optional/
+Provider Billing Adoption,Cross-Industry,Challenge,Providers reporting difficulty strengthening network security,77%,,2024,TrustCommerce,Medium,,https://trustcommerce.com/the-new-patient-priority-why-healthcare-payment-flexibility-is-no-longer-optional/
+Provider Billing Adoption,Cross-Industry,Collection Timing,Providers taking 30+ days to collect after patient encounter,71%,,2024,Kodiak Solutions,High,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Revenue Cycle,Physical Therapy,AR Days,Optimal AR days benchmark,<35 days,Range 20-40 days depending on state,2024,WebPT / APTA,High,"States with EDI regulations (WA, MN) achieve ~20 days",https://www.webpt.com/blog/essential-billing-benchmarks-for-your-pt-practice
+Revenue Cycle,Physical Therapy,AR Days,AR days with EDI-mandated states,~20 days,Washington and Minnesota examples,2024,Industry Research,Medium,EDI regulations drive faster processing,https://www.247medicalbillingservices.com/blog/revenue-cycles-in-physical-therapy-practices
+Revenue Cycle,Physical Therapy,Collection Rate,Net collection rate target,95%+,Optimal benchmark,2024,WebPT,High,Below 90% indicates billing problems,https://www.webpt.com/blog/essential-billing-benchmarks-for-your-pt-practice
+Revenue Cycle,Physical Therapy,Aged AR,A/R >120 days target,<25%,Of total claims receivable,2024,WebPT / Clinicient,High,,https://www.webpt.com/blog/essential-billing-benchmarks-for-your-pt-practice
+Revenue Cycle,Physical Therapy,Point of Service,Copay collection at date of service target,90%+,,2024,WebPT,High,Critical for PT cash flow,https://www.webpt.com/blog/essential-billing-benchmarks-for-your-pt-practice
+Revenue Cycle,Physical Therapy,Claim Speed,AR reduction from submitting claims within 24-48 hours,Up to 40%,,2024,WebPT,High,,https://www.webpt.com/blog/essential-billing-benchmarks-for-your-pt-practice
+Revenue Cycle,Private Practice,AR Days,Optimal AR days benchmark,30-40 days,,2024,MGMA / AAFP,High,>50 days indicates financial trouble,https://www.aafp.org/dam/AAFP/documents/practice_management/admin_staffing/FiveKeyMetricsPresentation.pdf
+Revenue Cycle,Private Practice,AR Days,Maximum acceptable AR days,<50 days,Beyond this indicates significant issues,2024,MGMA,High,,https://practolytics.com/blog/ar-days-what-this-number-means-for-the-health-of-your-practice/
+Revenue Cycle,Private Practice,Collection Rate,Net collection rate minimum,95%,,2024,MGMA,High,97-99% is optimal,https://www.aafp.org/dam/AAFP/documents/practice_management/admin_staffing/FiveKeyMetricsPresentation.pdf
+Revenue Cycle,Private Practice,Collection Rate,Optimal net collection rate,97-99%,Best practice target,2024,MGMA,High,,https://www.medicaleconomics.com/view/improving-days-in-accounts-receivable
+Revenue Cycle,Private Practice,Bad Debt,Bad debt target,<3%,Of total expected collections,2024,MGMA / AAFP,High,,https://www.aafp.org/family-physician/practice-and-career/managing-your-practice/practice-finances.html
+Revenue Cycle,Private Practice,Aged AR,A/R >90 days target,<10-15%,Of total A/R,2024,MGMA,High,,https://www.aafp.org/dam/AAFP/documents/practice_management/admin_staffing/FiveKeyMetricsPresentation.pdf
+Revenue Cycle,Private Practice,Denial Rate,Optimal denial rate,<5%,,2024,MGMA,High,5-10% is industry average,https://strivanthealth.com/revenue-cycle-management-metrics-that-matter/
+Revenue Cycle,Private Practice,Denial Rate,Industry average denial rate,5-10%,,2024,MGMA,Medium,,https://strivanthealth.com/revenue-cycle-management-metrics-that-matter/
+Revenue Cycle,Mental/Behavioral Health,AR Days,Average AR days (2025),65-75 days,Up from 50-55 days in 2024,2025,Behavioral Health Billing Research,Medium,Significant deterioration YoY,https://www.icanotes.com/2025/09/24/behavioral-health-billing-metrics-kpis/
+Revenue Cycle,Mental/Behavioral Health,AR Days,Optimal AR days target,<30 days,Best practice benchmark,2024-2025,Industry Benchmarks,High,,https://www.cloudrcmsolutions.com/reduce-ar-days-for-behavioral-health/
+Revenue Cycle,Mental/Behavioral Health,Denial Rate,Optimal denial rate with specialized services,<5%,,2024,Behavioral Health Billing Studies,Medium,,https://simitreehc.com/simitree-blog/8-important-metrics-and-kpis-for-behavioral-health-billing/
+Revenue Cycle,Mental/Behavioral Health,Collection Impact,Collection increase with professional billing services,15-25%,,2024,Behavioral Health Billing Studies,Medium,,https://zeemedicalbilling.com/blog/mental-health-billing-in-2025-the-complete-guide/
+Revenue Cycle,Mental/Behavioral Health,Appeals,Appeal success rate for mental health claims,54%,vs 38% average for all claim types,2024,Industry Research,Medium,,https://yourmissingpiece.com/key-metrics-for-behavioral-health-billing/
+Revenue Cycle,Mental/Behavioral Health,Appeals,Denied claims that are actually appealed,<1%,Massive missed revenue opportunity,2024,Industry Research,Medium,,https://yourmissingpiece.com/key-metrics-for-behavioral-health-billing/
+Revenue Cycle,Mental/Behavioral Health,First Pass,First-pass resolution rate target,90%+,,2024,Industry Benchmarks,High,,https://simitreehc.com/simitree-blog/8-important-metrics-and-kpis-for-behavioral-health-billing/
+Revenue Cycle,Urgent Care,Clean Claims,Clean claim rate best practice,>95%,,2024,Industry Benchmarks,High,,https://strivanthealth.com/revenue-cycle-management-metrics-that-matter/
+Revenue Cycle,Urgent Care,Denial Rate,Average denial rate across healthcare,10%,,2024,Industry Research,High,<4% for top performers,https://360medicalbillingservices.com/blog/key-metrics-for-er-and-urgent-care-billing/
+Revenue Cycle,Urgent Care,Denial Rate,Top performer denial rate,<4%,,2024,Industry Research,High,,https://360medicalbillingservices.com/blog/key-metrics-for-er-and-urgent-care-billing/
+Revenue Cycle,Urgent Care,First Pass,First-pass resolution rate standard,95%+,Industry standard,2024,Industry Benchmarks,High,,https://revcosolutions.com/revenue-cycle-kpis-13-crucial-metrics-to-boost-performance/
+Revenue Cycle,Urgent Care,Resubmission Cost,Cost per resubmitted claim,$25-$118,Administrative time cost,2024,Industry Research,Medium,,https://revcosolutions.com/revenue-cycle-kpis-13-crucial-metrics-to-boost-performance/
+Revenue Cycle,Critical Access Hospital,AR Days,U.S. median AR days,52.24 days,2010 CAH median (most recent benchmark available),2010,Flex Monitoring Team,Medium,Limited recent benchmarking data for CAHs,https://www.ruralcenter.org/sites/default/files/CAH%20Finance%20101%20Manual.pdf
+Revenue Cycle,Critical Access Hospital,Operating Margin,Total margin range,negative 20.5% to 28.0%,Wide variation across CAHs,2022-2023,Flex Monitoring Team,High,,https://pmc.ncbi.nlm.nih.gov/articles/PMC11662246/
+Revenue Cycle,Critical Access Hospital,Bad Debt,Bad debt write-off timing,120-140 days from discharge,Standard practice,2024,Industry Practice,Medium,,https://1library.net/article/summary-debt-policies-critical-access-hospital-financial-analyses.zp6mrorq
+Revenue Cycle,Critical Access Hospital,Reimbursement,Medicare cost-based reimbursement rate,101%,Of allowable costs,2024,CMS / MedPAC,High,Key CAH financial feature,https://www.medpac.gov/wp-content/uploads/2024/10/MedPAC_Payment_Basics_24_CAH_FINAL_SEC.pdf
+Revenue Cycle,Community Hospital,AR Days,AR days trend (YoY increase),2.2% YoY increase,October 2024; 5.4% YTD,2024,Kodiak Solutions,High,AR days worsening,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Revenue Cycle,Community Hospital,Bad Debt,Industry standard bad debt rate,2-3%,Of net patient revenue,2024,Industry Benchmarks,High,>5% raises alarms,https://www.hfma.org/finance-and-business-strategy/hospital-financial-and-revenue-cycle-benchmarks-paint-a-complicated-picture-heading-into-the-new-year/
+Revenue Cycle,Community Hospital,Denial Rate,Initial denial rate,11.8%,Up from 11.5% in 2023,2024,Kodiak Solutions,High,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Revenue Cycle,Community Hospital,Denial Trend,Request-for-information denial increase (inpatient commercial),17%,Year-over-year increase,2024,Kodiak Solutions,High,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Revenue Cycle,Community Hospital,Patient Collections,Patient collection rate from commercially insured,34.4%,Down from 37.6% in 2023,2024,Kodiak Solutions,High,Declining patient collections,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Revenue Cycle,Community Hospital,Patient Collections,Patient repayment rate (pre-COVID baseline),~54%,Jan 2018 to Feb 2020,2020,JAMA Health Forum,High,Declining in recent years,https://www.hfma.org/finance-and-business-strategy/hospital-financial-and-revenue-cycle-benchmarks-paint-a-complicated-picture-heading-into-the-new-year/
+Revenue Cycle,Community Hospital,Operating Margin,Median operating margin projected,0.8-2%,For 2025,2025,Fitch Ratings,High,Razor-thin margins,https://www.hfma.org/finance-and-business-strategy/hospital-financial-and-revenue-cycle-benchmarks-paint-a-complicated-picture-heading-into-the-new-year/
+Revenue Cycle,Ambulatory Surgery Center,Ownership,For-profit entities,95.3%,,2024,MedPAC,High,,https://www.medpac.gov/wp-content/uploads/2024/03/Mar24_Ch10_MedPAC_Report_To_Congress_SEC.pdf
+Revenue Cycle,Ambulatory Surgery Center,Reimbursement,Medicare conversion factor CY2025,$54.895,For ASCs meeting quality reporting,2025,CMS,High,,https://www.cms.gov/newsroom/fact-sheets/cy-2025-medicare-hospital-outpatient-prospective-payment-system-and-ambulatory-surgical-center-0
+Revenue Cycle,Ambulatory Surgery Center,Reimbursement,2025 payment update,2.9%,Annual increase,2025,CMS,High,,https://www.cms.gov/newsroom/fact-sheets/cy-2025-medicare-hospital-outpatient-prospective-payment-system-and-ambulatory-surgical-center-0
+Revenue Cycle,Fertility Clinic,Treatment Cycles,Patients requiring >1 cycle,70%+,For successful outcome,2024,Fertility Bridge / AJMC,High,,https://www.fertilitybridge.com/news-articles/ivf-benefits-patient-finance-2026
+Revenue Cycle,Fertility Clinic,Coverage,Americans with insurance covering IVF,25%,,2024,AJMC,High,75% have no IVF coverage,https://www.ajmc.com/view/the-evolving-us-fertility-care-landscape-strategies-for-addressing-increasing-demand
+Revenue Cycle,Fertility Clinic,Cost,Average IVF cycle cost,"$15,000-$30,000","Per cycle; can exceed $30,000",2024,Fertility Bridge / AJMC,High,,https://www.illumefertility.com/pricing-and-insurance/ivf-costs
+Revenue Cycle,Fertility Clinic,Cost,Average cycles needed for pregnancy,2.5,,2024,Industry Research,Medium,Total costs can exceed $40-60K,https://www.illumefertility.com/fertility-blog/ultimate-guide-to-fertility-treatment-costs
+Revenue Cycle,Fertility Clinic,Patient OOP,Average out-of-pocket cost per person over 18 months,"$24,000+",,2024,Industry Research,Medium,,https://www.fertilitybridge.com/news-articles/ivf-benefits-patient-finance-2026
+Revenue Cycle,Fertility Clinic,Patient OOP,Average OOP for successful IVF pregnancy,"$61,000+",,2024,Industry Research,Medium,,https://www.fertilitybridge.com/news-articles/ivf-benefits-patient-finance-2026
+Revenue Cycle,Fertility Clinic,Reimbursement,Reimbursement rate from insurance/carve-outs,~50%,Of billed rates,2024,Industry Research,Medium,,https://www.fertilitybridge.com/news-articles/ivf-benefits-patient-finance-2026
+Revenue Cycle,Fertility Clinic,Coverage Trend,Organizations offering IVF coverage,32%,Up from 13% in 2016,2024,KFF / AJMC,High,Growing but still minority,https://www.ajmc.com/view/the-evolving-us-fertility-care-landscape-strategies-for-addressing-increasing-demand
+Revenue Cycle,Fertility Clinic,Payment Model,Predominant payment model,Upfront/bundled,Bundled pricing common; upfront required,2024,Fertility Bridge,Medium,,https://www.fertilitybridge.com/news-articles/ivf-benefits-patient-finance-2026
+Insurance Trends,Cross-Industry,HDHP Enrollment,HDHP/SO enrollment (2024),27%,Of covered workers,2024,KFF Employer Health Benefits Survey,High,,https://www.kff.org/health-costs/2024-employer-health-benefits-survey/
+Insurance Trends,Cross-Industry,HDHP Enrollment,HDHP/SO enrollment (2025),33%,Of covered workers; significant increase from 27% in 2024,2025,KFF Employer Health Benefits Survey,High,Major shift toward HDHPs,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Insurance Trends,Cross-Industry,Plan Distribution,PPO enrollment (2025),46%,Most common plan type,2025,KFF,High,,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Insurance Trends,Cross-Industry,Plan Distribution,HMO enrollment (2025),12%,,2025,KFF,High,,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Insurance Trends,Cross-Industry,Plan Distribution,POS enrollment (2025),9%,,2025,KFF,High,,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Insurance Trends,Cross-Industry,HDHP Limits 2025,Minimum deductible (individual),"$1,650",,2025,IRS,High,,https://www.goodrx.com/insurance/hdhp/high-deductible-health-plan-limits
+Insurance Trends,Cross-Industry,HDHP Limits 2025,Minimum deductible (family),"$3,300",,2025,IRS,High,,https://www.goodrx.com/insurance/hdhp/high-deductible-health-plan-limits
+Insurance Trends,Cross-Industry,HDHP Limits 2025,Maximum OOP (individual),"$8,300",,2025,IRS,High,,https://www.goodrx.com/insurance/hdhp/high-deductible-health-plan-limits
+Insurance Trends,Cross-Industry,HDHP Limits 2025,Maximum OOP (family),"$16,600",,2025,IRS,High,,https://www.goodrx.com/insurance/hdhp/high-deductible-health-plan-limits
+Insurance Trends,Cross-Industry,HDHP Limits 2026,Minimum deductible (individual),"$1,700",,2026,IRS,High,,https://www.goodrx.com/insurance/fsa-hsa/high-deductible-health-plan-hdhp-limits-increase
+Insurance Trends,Cross-Industry,HDHP Limits 2026,Maximum OOP (individual),"$8,500",,2026,IRS,High,,https://www.goodrx.com/insurance/fsa-hsa/high-deductible-health-plan-hdhp-limits-increase
+Insurance Trends,Cross-Industry,HDHP Limits 2026,Maximum OOP (family),"$17,000",,2026,IRS,High,,https://www.goodrx.com/insurance/fsa-hsa/high-deductible-health-plan-hdhp-limits-increase
+Insurance Trends,Cross-Industry,Deductible,Average deductible for single coverage,"$1,886",,2025,KFF,High,"Up 17% over 5 years, 43% over decade",https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Insurance Trends,Cross-Industry,Deductible,"Workers with deductible >= $2,000 (single)",34%,Of covered workers,2025,KFF,High,,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Insurance Trends,Cross-Industry,Patient Liability,Average patient liability (private insurance),$375.41,Per encounter/claim,2024,Kodiak Solutions,Medium,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Insurance Trends,Cross-Industry,Patient Liability,Average patient liability (Medicare Advantage),$172.50,Per encounter/claim,2024,Kodiak Solutions,Medium,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Employer Benefits,Cross-Industry,Premium,Average single coverage premium,"$9,325",Up 5% from 2024,2025,KFF,High,,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Employer Benefits,Cross-Industry,Premium,Average family coverage premium,"$26,993",Up 6% from 2024,2025,KFF,High,,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Employer Benefits,Cross-Industry,Contribution,Worker contribution for single coverage,"16% ($1,440)",,2025,KFF,High,,https://files.kff.org/attachment/Employer-Health-Benefits-Survey-2025-Annual-Survey-Summary-of-Findings.pdf
+Employer Benefits,Cross-Industry,Contribution,Worker contribution for family coverage,"26% ($6,850)",,2025,KFF,High,,https://files.kff.org/attachment/Employer-Health-Benefits-Survey-2025-Annual-Survey-Summary-of-Findings.pdf
+Employer Benefits,Cross-Industry,Self-Funding,Workers in self-funded plans,67%,"27% small firms, 80% large firms",2025,KFF,High,,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Employer Benefits,Cross-Industry,Coverage,All workers covered by employer health plans,55%,,2025,KFF,High,,https://www.kff.org/health-costs/2025-employer-health-benefits-survey/
+Employer Benefits,Cross-Industry,Eligibility,Workers eligible for benefits at offering firms,80%,76% of eligible workers enroll,2025,KFF,High,,https://files.kff.org/attachment/Employer-Health-Benefits-Survey-2025-Annual-Survey-Summary-of-Findings.pdf
+Revenue Cycle,Cross-Industry,AR Days,General AR days range,30-50 days,Varies by payer mix/specialty,2024,Industry Benchmarks,High,<40 days for physician practices,https://strivanthealth.com/revenue-cycle-management-metrics-that-matter/
+Revenue Cycle,Cross-Industry,Aged AR,A/R >90 days optimal,<15-20%,Of total A/R,2024,MGMA,High,,https://www.hfma.org/revenue-cycle/kpis/7-kpis-providers-should-be-tracking/
+Revenue Cycle,Cross-Industry,Bad Debt,Industry standard bad debt,2-3%,<5% acceptable,2024,Industry Benchmarks,High,,https://www.hfma.org/finance-and-business-strategy/hospital-financial-and-revenue-cycle-benchmarks-paint-a-complicated-picture-heading-into-the-new-year/
+Revenue Cycle,Cross-Industry,Clean Claims,Clean claim rate target,>95%,,2024,Industry Benchmarks,High,,https://strivanthealth.com/revenue-cycle-management-metrics-that-matter/
+Revenue Cycle,Cross-Industry,Denial Rate,Industry average denial rate,5-10%,<5% optimal,2024,Industry Benchmarks,High,,https://strivanthealth.com/revenue-cycle-management-metrics-that-matter/
+Revenue Cycle,Cross-Industry,Collection Rate,Net collection rate minimum,95%,97-99% optimal,2024,MGMA,High,,https://www.hfma.org/revenue-cycle/kpis/7-kpis-providers-should-be-tracking/
+Revenue Cycle,Cross-Industry,Cost to Collect,Cost to collect target,<$0.05-$0.07,Per dollar of revenue,2024,Industry Benchmarks,Medium,,https://www.plutushealthinc.com/post/revenue-cycle-management-kpi
+Revenue Cycle,Cross-Industry,Point of Service,Point-of-service collections YoY increase,13.1%,October 2024,2024,Kodiak Solutions,High,Positive trend,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Denial Trends,Cross-Industry,Rate,Initial denial rate (2024),11.8%,Up from 11.5% in 2023,2024,Kodiak Solutions,High,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Denial Trends,Cross-Industry,Volume,Denied amounts increase (inpatient),6.9%,YoY 2024 vs 2023,2024,Kodiak Solutions,High,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Denial Trends,Cross-Industry,Volume,Denied amounts increase (outpatient),4.8%,YoY 2024 vs 2023,2024,Kodiak Solutions,High,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Denial Trends,Cross-Industry,Type,Medical necessity/lack of info denial increase (inpatient),148%,,2024,Kodiak Solutions,High,Dramatic increase,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Denial Trends,Cross-Industry,Type,Medical necessity/lack of info denial increase (outpatient),84%,,2024,Kodiak Solutions,High,,https://www.healthcarefinancenews.com/news/revenue-cycle-challenged-low-collection-rates-high-denials
+Denial Trends,Cross-Industry,Security,Average cost of healthcare data breach,$9.8 million,,2024,IBM / Ponemon,High,,https://billflash.com/billing-best-practices/2025-healthcare-payment-trends/
+Denial Trends,Cross-Industry,Credit,Medical debt banned from credit reports,January 2025,All medical debt,2025,CFPB,High,Previous partial removal started July 2022,https://www.kff.org/patient-consumer-protections/policy-changes-bring-renewed-focus-on-high-deductible-health-plans/
+Patient Payment Preferences,Cross-Industry,Payment Preference,Rise in patients paying via online portals (2019-2022),437%,,2022,InstaMed/JPMorgan,High,,https://www.mdclarity.com/blog/self-service-patient-payments
+Patient Payment Preferences,Cross-Industry,Payment Preference,Patients wanting ability to pay in installments,80%,,2024,Flywire Survey,Medium,,https://www.flywire.com/news/flywire-survey-uncovers-increasing-demand-for-flexible-patient-centric-payment-solutions-in-u-s-healthcare
+Patient Payment Preferences,Cross-Industry,General,Patients who cannot afford unexpected lump-sum medical bill,60%,,2024,Flywire Survey,Medium,,https://www.flywire.com/news/flywire-survey-uncovers-increasing-demand-for-flexible-patient-centric-payment-solutions-in-u-s-healthcare
+Patient Payment Preferences,Cross-Industry,Payment Preference,Patients rating flexible payment plans as important,75%,,2026,PracticeBetter Survey,Medium,,https://practicebetter.io/blog/the-shift-to-self-service-healthcare-what-patients-expect-in-2026
+Patient Payment Preferences,Cross-Industry,Portal Adoption,Patients including portals in top 3 engagement preferences,60%,,2026,PracticeBetter Survey,Medium,,https://practicebetter.io/blog/the-shift-to-self-service-healthcare-what-patients-expect-in-2026
+Provider Billing Adoption,Cross-Industry,Portal Adoption,Healthcare orgs offering patient portals,>90%,,2022,HFMA,Medium,,https://www.hfma.org/payment-reimbursement-and-managed-care/payment-trends/3-reasons-healthcare-providers-eager-offer-text-to-pay/
+Provider Billing Adoption,Community Hospital,Portal Adoption,Hospital patients who actually use portals,<25%,,2022,HFMA,Medium,,https://www.hfma.org/payment-reimbursement-and-managed-care/payment-trends/3-reasons-healthcare-providers-eager-offer-text-to-pay/
+Provider Billing Adoption,Cross-Industry,General,Providers still sending paper statements,63%,,2026,Intuition Labs/Industry Analysis,Medium,,https://intuitionlabs.ai/articles/patient-payment-platforms-review
+Provider Billing Adoption,Cross-Industry,Payment Preference,Payers still reimbursing with paper checks,68%,,2024,InstaMed 15th Annual Report,High,,https://mailmystatements.com/trends-in-healthcare-payments-report-key-takeaways/
+Provider Billing Adoption,Cross-Industry,General,Text message response rate within 90 seconds,98%,,2022,HFMA,Medium,,https://www.hfma.org/payment-reimbursement-and-managed-care/payment-trends/3-reasons-healthcare-providers-eager-offer-text-to-pay/
+Patient Payment Preferences,Cross-Industry,Patient Loyalty,Patients who would switch providers after poor billing experience,56%,,2023,RevSpring Survey,Medium,,https://acdis.org/articles/news-patients-increasingly-more-likely-switch-providers-after-poor-billing-experience
+Patient Payment Preferences,Cross-Industry,Patient Loyalty,Patients aged 18-26 likely to switch due to poor billing,74%,,2023,RevSpring Survey,Medium,,https://acdis.org/articles/news-patients-increasingly-more-likely-switch-providers-after-poor-billing-experience
+Patient Payment Preferences,Cross-Industry,Patient Loyalty,Patients who have switched due to negative billing experience,38%,,2023,Healthcare Financial Experience Study,Medium,,https://5672097.fs1.hubspotusercontent-na1.net/hubfs/5672097/Content%20Assets/2024%20Healthcare%20Financial%20Experience%20Study.pdf
+Patient Payment Preferences,Cross-Industry,Payment Preference,Patients saying payment plans and digital payments would motivate switching,32.5%,,2024,U.S. Bank Healthcare Payments Report,Medium,,https://engage.usbank.com/rs/451-RQS-232/images/US%20Bank%20Healthcare%20Payments%20report.pdf
+Revenue Cycle,Cross-Industry,AR Days,High-performer AR days target,<30 days,,2025,Human Medical Billing/Industry,Medium,,https://humanmedicalbilling.com/blog/essential-medical-billing-kpis-for-2025-metrics-that-matter-for-revenue-cycle-success/
+Revenue Cycle,Cross-Industry,Collection Rate,Patient collections as % of total patient billings,~24%,,2025,PayZen/HFMA Survey,Medium,,https://payzen.com/wp-content/uploads/2025/06/PayZen-The-Providers-Perspective_2025.pdf
+Revenue Cycle,Cross-Industry,Bad Debt,Bad debt increase between 2023 and 2024,+14%,,2025,PayZen Provider Perspective,Medium,,https://payzen.com/wp-content/uploads/2025/06/PayZen-The-Providers-Perspective_2025.pdf
+Revenue Cycle,Community Hospital,Collection Rate,Hospitals prioritizing increasing net collections,54.15%,,2025,PayZen Provider Perspective,Medium,,https://payzen.com/wp-content/uploads/2025/06/PayZen-The-Providers-Perspective_2025.pdf
+Revenue Cycle,Cross-Industry,General,Providers investing in patient access improvements,79%,,2025,Experian Health,High,,https://www.experian.com/blogs/healthcare/how-patient-self-service-improves-patient-access/
+Revenue Cycle,Ambulatory Surgery Center,AR Days,Medicare AR days benchmark,15-20 days,,2025,SIS/First ASC Benchmarking,Medium,,https://blog.sisfirst.com/better-asc-benchmarking-putting-revenue-cycle-metrics-kpis-to-work
+Revenue Cycle,Ambulatory Surgery Center,AR Days,Commercial payer AR days benchmark,21-45 days,,2025,SIS/First ASC Benchmarking,Medium,,https://blog.sisfirst.com/better-asc-benchmarking-putting-revenue-cycle-metrics-kpis-to-work
+Revenue Cycle,Fertility Clinic,Cost,Single IVF cycle base cost,"$12,000-$14,000",,2024,Maven Clinic/Industry,Medium,,https://www.mavenclinic.com/post/in-what-states-is-ivf-covered-by-insurance
+Revenue Cycle,Fertility Clinic,Cost,"Total IVF cycle cost (with medications, monitoring)","$23,000-$30,000",,2024,Maven Clinic/Industry,Medium,,https://www.mavenclinic.com/post/in-what-states-is-ivf-covered-by-insurance
+Revenue Cycle,Critical Access Hospital,Closure Risk,Rural hospitals at risk of closure,703 total; 360 immediate risk,,2024,Penn State PORH,Medium,,https://www.porh.psu.edu/703-hospitals-at-risk-of-closure-state-by-state/
+Revenue Cycle,Critical Access Hospital,Operating Margin,Rural hospitals with negative operating margin,46%,,2025,Chartis 2025 Rural Health Report,High,,https://www.chartis.com/sites/default/files/documents/CCRH%20WP%20-%202025%20Rural%20health%20state%20of%20the%20state_021125.pdf
+Revenue Cycle,Critical Access Hospital,Closure Risk,Rural hospitals vulnerable to closure,432,,2025,Chartis,High,,https://www.chartis.com/sites/default/files/documents/CCRH%20WP%20-%202025%20Rural%20health%20state%20of%20the%20state_021125.pdf
+Revenue Cycle,Critical Access Hospital,Bad Debt,Rural health clinic bad debt (% of net revenue),13-20%,,2024,NOSORH/Independent RHC Institute,Medium,,https://nosorh.org/wp-content/uploads/2024/07/06-RCM-KPI-presentation-Independent-RHC-Institute.pdf
+Revenue Cycle,Critical Access Hospital,General,Independent rural hospitals pushed into the red by Medicaid cuts,55 hospitals across 26 states,,2025,Families USA Analysis,Medium,,https://familiesusa.org/wp-content/uploads/2025/06/Rural-Hospital-Medicaid-Analysis.pdf
+Revenue Cycle,Critical Access Hospital,Closure Risk,Independent rural hospitals at serious risk of closure,380,,2025,Families USA Analysis,Medium,,https://familiesusa.org/wp-content/uploads/2025/06/Rural-Hospital-Medicaid-Analysis.pdf
+Revenue Cycle,Community Hospital,Bad Debt,Hospitals reporting >$10M in bad debt,Nearly 30%,,2025,Definitive Healthcare,Medium,,https://www.definitivehc.com/blog/hospital-bad-debt-statistics-you-need-to-know
+Bad Debt Trends,Community Hospital,Bad Debt,National: bad debt & charity YTD change 2025,+10% YoY; +40% vs 2022,,2025,Becker's/Strata Decision Technology,High,,https://www.beckershospitalreview.com/finance/hospital-bad-debt-charity-care-up-10-in-2025/
+Bad Debt Trends,Community Hospital,Bad Debt,West: bad debt & charity YTD 2025 vs 2022,+15% YoY; +55% vs 2022,,2025,Becker's/Strata Decision Technology,High,,https://www.beckershospitalreview.com/finance/hospital-bad-debt-charity-care-up-10-in-2025/
+Bad Debt Trends,Community Hospital,Bad Debt,Midwest: bad debt & charity YTD 2025 vs 2022,+15% YoY; +63% vs 2022 (largest increase),,2025,Becker's/Strata Decision Technology,High,,https://www.beckershospitalreview.com/finance/hospital-bad-debt-charity-care-up-10-in-2025/
+Bad Debt Trends,Community Hospital,Bad Debt,South: bad debt & charity YTD 2025 vs 2022,+9% YoY; +18% vs 2022,,2025,Becker's/Strata Decision Technology,High,,https://www.beckershospitalreview.com/finance/hospital-bad-debt-charity-care-up-10-in-2025/
+Bad Debt Trends,Community Hospital,Bad Debt,Northeast/Mid-Atlantic: bad debt & charity YTD 2025 vs 2022,Flat YoY; +40% vs 2022,,2025,Becker's/Strata Decision Technology,High,,https://www.beckershospitalreview.com/finance/hospital-bad-debt-charity-care-up-10-in-2025/
+Bad Debt Trends,Community Hospital,Bad Debt,Great Plains: bad debt & charity YTD 2025 vs 2022,+9% YoY; +28% vs 2022,,2025,Becker's/Strata Decision Technology,High,,https://www.beckershospitalreview.com/finance/hospital-bad-debt-charity-care-up-10-in-2025/
+Bad Debt Trends,Community Hospital,Bad Debt,Bad debt + charity per calendar day vs 2022,+32% nationally,,2025,HFMA,Medium,,https://www.hfma.org/fast-finance/hospital-care-costs-soar-charity/
+Patient Financial Responsibility,Cross-Industry,Cost,Out-of-pocket spending nationally (2024),$556.6 billion (11% of NHE),,2024,CMS National Health Expenditure Data,High,,https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet
+Patient Financial Responsibility,Cross-Industry,Cost,Per-person out-of-pocket spending,"$1,514",,2023,KFF,High,,https://www.kff.org/health-costs/health-policy-101-health-care-costs-and-affordability/
+Patient Financial Responsibility,Cross-Industry,Payment Preference,Self-pay growing year-over-year,+8% YoY,,2025,Cedar,High,,https://www.cedar.com/blog/2025-self-pay-patient-collections-trends/
+Patient Financial Responsibility,Cross-Industry,Payment Preference,Self-pay as % of patient responsibility,35%,,2025,Cedar,High,,https://www.cedar.com/blog/2025-self-pay-patient-collections-trends/
+Patient Financial Responsibility,Community Hospital,Bad Debt,Self-pay after insurance as % of bad debt (2021 vs 2018),58% vs 11%,,2021,Definitive Healthcare,Medium,,https://www.definitivehc.com/blog/hospital-bad-debt-statistics-you-need-to-know
+Patient Financial Responsibility,Cross-Industry,Bad Debt,Insured patients as source of bad debt (Crowe data),58% (5x increase),,2024,Crowe/PayMedix,Medium,,https://paymedix.com/growing-out-of-pocket-contributions-disrupt-primary-care/
+Operating Cost Pressures,Private Practice,Cost,Medical groups reporting higher operating costs (2025),90%,,2025,MGMA,High,,https://www.mgma.com/mgma-stat/medical-practice-operating-costs-are-still-rising-in-2025-heres-how-to-control-them
+Operating Cost Pressures,Private Practice,Cost,Average operating expense increase (2025 vs 2024),+11.1%,,2025,MGMA,High,,https://www.mgma.com/mgma-stat/medical-practice-operating-costs-are-still-rising-in-2025-heres-how-to-control-them
+Operating Cost Pressures,Cross-Industry,Cost,Medical cost trend projected for 2026 (group market),8.5%,,2025,PwC Health Research Institute,Medium,,https://www.pwc.com/us/en/industries/health-industries/library/behind-the-numbers.html
+Operating Cost Pressures,Community Hospital,Operating Margin,Hospital operating margins (Nov 2025),2.0%,,2025,Becker's/Kaufman Hall,High,,https://www.beckershospitalreview.com/finance/hospital-margins-hit-2-but-regional-gaps-widen/
+Operating Cost Pressures,Community Hospital,Operating Margin,Health system median margin,1.1%,,2026,Commerce Healthcare,Medium,,https://www.commercehealthcare.com/trends-insights/healthcare-finance-trends
+Regulatory Pressures,Cross-Industry,Regulatory,No Surprises Act: limits balance billing for OON emergency/ancillary services,Effective Jan 2022,,2022,CMS,High,,https://www.cms.gov/files/document/nsa-keyprotections.pdf
+Regulatory Pressures,Community Hospital,Regulatory,Price Transparency EO: requiring actual prices (not estimates),Feb 2025,,2025,Paubox/Industry,Medium,,https://www.paubox.com/blog/hospital-price-transparency-requirements-and-compliance-challenges
+Regulatory Pressures,Community Hospital,Regulatory,Hospital compliance with price transparency rule,Only 29%,,2024,PMC/NIHCM,Medium,,https://pmc.ncbi.nlm.nih.gov/articles/PMC11129567/
+Cybersecurity,Cross-Industry,Cost,Change Healthcare breach total cost,$2.87 billion,,2024,BankInfoSecurity,Medium,,https://www.bankinfosecurity.com/change-healthcare-attack-cost-estimate-reaches-nearly-29b-a-26541
+Cybersecurity,Cross-Industry,Cybersecurity,Individuals affected by Change Healthcare breach,193 million,,2024,Nixon Peabody,Medium,,https://www.nixonpeabody.com/insights/alerts/2025/11/12/change-healthcare-cybersecurity-breach-impact-on-healthcare-providers

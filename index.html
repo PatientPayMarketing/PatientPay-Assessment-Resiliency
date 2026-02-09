@@ -1,46 +1,27 @@
 <!DOCTYPE html>
 <!--
   ============================================
-  PATIENTPAY SENIOR LIVING ASSESSMENT
-  UI VERSION: v4-dark-premium-segment (ROOT)
-  CREATED: January 2026
-  UPDATED: January 2026 - V4 SNF TWO-CATEGORY MODEL
+  PATIENTPAY AMBULATORY PRACTICE RESILIENCY ASSESSMENT
+  UI VERSION: v1-dark-premium-segment (ROOT)
+  CREATED: February 2026
   ============================================
 
   ARCHITECTURE:
   This file uses the shared core engine for all business logic.
   UI-specific code only - no questions, scoring, or calculations here.
 
-  CORE ENGINE: ./core/assessment-engine.js (v4.13)
-  - Facility type routing with 4 segments (SL, MC, SNF, CCRC)
-  - IL+AL combined into Senior Living (SL) segment
-  - SNF uses TWO categories: Collection Efficiency (60%), Family Experience (40%)
-  - Other segments use THREE categories
-  - Multi-guarantor billing as primary value proposition
-  - Payment plans for SNF path
-  - SNF payment questions split: channels (how to pay) + types (what methods)
-  - Results flow definition (5-7 slides depending on segment)
-  - Simplified webhook payload (~30 fields)
+  CORE ENGINE: ./core/assessment-engine.js (v1.0)
+  - Practice type routing with 6 segments (PP, PT, BH, UC, ASC, FC)
+  - All segments use THREE categories: Revenue Cycle Resilience, Patient Payment Experience, Competitive Position
+  - Segment-specific category weights
+  - Autopay as featured value proposition
+  - Results flow definition (7 slides)
+  - Simplified webhook payload
   - Export functions (CSV, PDF, webhook)
 
   DESIGN PHILOSOPHY:
   Show-stopping, conversation-starting UI that makes people
   stop and call their friends. Every transition is an event.
-
-  V4 FEATURES:
-  - SNF two-category model (no Competitive Position)
-  - Dynamic category display based on segment
-  - Simplified webhook payload (answers + scores)
-  - Family billing experience focus for SNF
-
-  V3 FEATURES (preserved):
-  - Facility type selection with segment descriptions
-  - Dynamic questions based on segment
-  - Segment-specific category weights displayed in results
-  - Multi-guarantor billing insights prominently featured
-  - SNF-specific AR/claims metrics
-  - MC-specific family management questions
-  - CCRC-specific multi-level coordination
 
   STANDALONE: No - imports from core/assessment-engine.js
 -->
@@ -60,7 +41,7 @@
     form-action 'self';
   ">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Senior Living Payment Readiness Assessment</title>
+  <title>Ambulatory Practice Financial Resiliency Assessment</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- V4.13: Pinned versions with SRI integrity hashes for supply-chain security -->
   <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin="anonymous" integrity="sha384-tMH8h3BGESGckSAVGZ82T9n90ztNXxvdwvdM6UoR56cYcf+0iGXBliJ29D+wZ/x8"></script>
@@ -513,50 +494,51 @@
     }
 
     // ============================================
-    // IMPORTS FROM CORE ENGINE V4.7
+    // IMPORTS FROM CORE ENGINE
     // All business logic comes from the shared engine
-    // V4: SNF uses two-category model (Operations 60%, Family 40%)
-    // V4.6: Added getCategoryName for segment-aware category names
-    // V4.7: Added strengths analysis and PatientPay projections
     // ============================================
     const {
       questions,
       categoryNames,
-      snfCategoryNames, // V4.6: SNF uses "Patient & Family Experience"
-      getCategoryName,  // V4.6: Helper function for segment-aware names
+      getCategoryName,
       resultsFlow,
-      resultsFlowV47,   // V4.7: New emotional arc flow
+      resultsFlowV47,
       sources,
-      facilityTypes,
+      practiceTypes,
       stats,
-      industryBenchmarks, // V4.7: For benchmark comparisons
+      industryBenchmarks,
       getVisibleQuestions,
       calculateScores,
-      calculateQuestionScore, // V4.7: For question-level scoring
+      calculateQuestionScore,
       getScoreLevel,
       getScoreColor,
       calculateInsights,
-      getActionableRecommendations, // V4.7: Answer-driven recommendations
-      getGapAnalysis,     // V4.7: Gap analysis vs benchmarks
-      getStrengths,       // V4.7: Identify user strengths
-      calculatePatientPayProjections, // V4.7: Projected improvement scores
-      getPerformanceVsBenchmark, // V4.7: Score vs benchmark labels
+      getActionableRecommendations,
+      getGapAnalysis,
+      getStrengths,
+      calculatePatientPayProjections,
+      getPerformanceVsBenchmark,
       prepareExportData,
       generateCSV,
       downloadPDFReport,
       sendWebhook
     } = window.AssessmentEngine;
 
+    // Backwards compat aliases
+    const facilityTypes = practiceTypes;
+    const snfCategoryNames = categoryNames;
+
     // UI-specific color mapping for categories
     const categoryColors = ['#3c8fc7', '#8B5CF6', '#fcc93b'];
 
     // Segment colors for visual differentiation
     const segmentColors = {
-      IL: '#10B981',   // Green - simple/independent
-      AL: '#3c8fc7',   // Blue - assisted
-      MC: '#8B5CF6',   // Purple - memory care
-      SNF: '#F59E0B',  // Amber - skilled nursing
-      CCRC: '#fcc93b'  // Yellow - life plan
+      PP: '#3c8fc7',   // Blue - physician practice
+      PT: '#10B981',   // Green - physical therapy
+      BH: '#8B5CF6',   // Purple - behavioral health
+      UC: '#F59E0B',   // Amber - urgent care
+      ASC: '#fcc93b',  // Yellow - surgery center
+      FC: '#EC4899'    // Pink - fertility
     };
 
     // ============================================
@@ -719,21 +701,21 @@
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
               animation: 'fadeInUp 1s ease-out 0.2s both'
             }}>
-              Payment Readiness<br />
+              Financial Resiliency<br />
               <span style={{ background: 'linear-gradient(135deg, #fcc93b 0%, #fff 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Assessment
               </span>
             </h1>
 
             <p style={{
-              fontSize: 20, color: 'var(--text-secondary)', maxWidth: 560, margin: '0 auto 56px', lineHeight: 1.7,
+              fontSize: 20, color: 'var(--text-secondary)', maxWidth: 600, margin: '0 auto 56px', lineHeight: 1.7,
               animation: 'fadeInUp 1s ease-out 0.3s both'
             }}>
-              Discover how your PointClickCare organization's payment operations compare to industry benchmarks.
+              You can't control rising costs, shifting regulations, or insurance trends. But you can control how resilient your practice is. See where you stand.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 56 }}>
-              {[{ value: '8-12', label: 'Questions', color: '#3c8fc7' }, { value: '3', label: 'Categories', color: '#fcc93b' }, { value: '3-5', label: 'Minutes', color: '#3c8fc7' }].map((stat, i) => (
+              {[{ value: '12-15', label: 'Questions', color: '#3c8fc7' }, { value: '3', label: 'Categories', color: '#fcc93b' }, { value: 'Under 5', label: 'Minutes', color: '#3c8fc7' }].map((stat, i) => (
                 <div key={i} className="glass-card" style={{
                   padding: 32, animation: `fadeInUp 0.8s ease-out ${0.4 + i * 0.1}s both`,
                   background: 'rgba(7, 33, 64, 0.6)', border: `1px solid ${stat.color}30`
@@ -753,7 +735,7 @@
               </svg>
             </button>
 
-            {/* V4.13: PCC Marketplace badge - glassmorphic white card for contrast */}
+            {/* Industry trust signals */}
             <div style={{
               marginTop: 48,
               display: 'flex',
@@ -762,32 +744,14 @@
               gap: 12,
               animation: 'fadeInUp 1s ease-out 0.9s both'
             }}>
-              <div style={{
-                background: 'rgba(255, 255, 255, 0.92)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                borderRadius: 12,
-                padding: '12px 20px',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-                border: '1px solid rgba(255, 255, 255, 0.3)'
-              }}>
-                <img
-                  src="./assets/pcc-marketplace-logo.png"
-                  alt="PointClickCare Marketplace"
-                  style={{
-                    height: 28,
-                    display: 'block'
-                  }}
-                />
-              </div>
               <p style={{
                 fontSize: 12,
                 color: 'var(--text-muted)',
-                maxWidth: 320,
+                maxWidth: 400,
                 lineHeight: 1.5,
                 textAlign: 'center'
               }}>
-                PatientPay is a trusted partner on the PointClickCare Marketplace
+                Benchmarked against 288+ industry data points across 6 practice types
               </p>
             </div>
           </div>
@@ -814,7 +778,7 @@
     // ============================================
     // FUNNEL TRACKING - V4.17: Diagnostic events for drop-off analysis
     // ============================================
-    const FUNNEL_WEBHOOK_URL = 'https://hook.us2.make.com/d6l99sh2s49kbowf79nfhfai8yqokbqq';
+    const FUNNEL_WEBHOOK_URL = ''; // Placeholder - configure in Make.com
 
     // Generate a unique session ID once per page load
     const FUNNEL_SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
@@ -860,8 +824,7 @@
     const ContactForm = ({ onSubmit, onCompetitorBlocked }) => {
       const [formData, setFormData] = useState({
         name: '', email: '', organization: '',
-        facilityType: '', // Now captured here instead of as first question
-        bedCount: '', avgMonthlyRate: ''
+        facilityType: '' // Practice type - captured here instead of as first question
       });
       const [errors, setErrors] = useState({});
       const [focusedField, setFocusedField] = useState(null);
@@ -875,23 +838,21 @@
         'comcast.net', 'verizon.net', 'att.net', 'sbcglobal.net', 'cox.net'
       ];
       const COMPETITOR_DOMAINS = [
-        'instamed.com', 'waystar.com', 'cedar.com', 'transactcare.com',
+        'instamed.com', 'waystar.com', 'cedar.com', 'collectly.com',
         'inovalon.com', 'revspringinc.com', 'availity.com', 'inboxhealth.com',
-        'caregrove.com', 'alineops.com', 'yardi.com'
+        'simplee.com', 'flywire.com', 'swell.com', 'rectanglehealth.com',
+        'phreesia.com', 'salucro.com', 'curapay.com'
       ];
 
-      // Facility type options (from core engine) - V4.1: IL+AL combined into Senior Living
+      // Practice type options (from core engine)
       const facilityOptions = [
-        { value: 'SL', label: 'Independent / Assisted Living', desc: 'Active seniors with amenities OR daily activity support' },
-        { value: 'MC', label: 'Memory Care', desc: 'Specialized care for Alzheimer\'s or dementia' },
-        { value: 'SNF', label: 'Skilled Nursing Facility', desc: '24/7 clinical care, nursing, therapy, rehabilitation' },
-        { value: 'CCRC', label: 'CCRC / Life Plan Community', desc: 'Multiple care levels on one campus' }
+        { value: 'PP', label: 'Physician Practice / Medical Group', desc: 'Primary care, specialty, or multi-specialty groups' },
+        { value: 'PT', label: 'Physical Therapy / Rehab', desc: 'PT, OT, speech therapy, rehabilitation clinics' },
+        { value: 'BH', label: 'Mental / Behavioral Health', desc: 'Psychiatry, psychology, counseling, substance abuse' },
+        { value: 'UC', label: 'Urgent Care', desc: 'Walk-in clinics, retail health, immediate care' },
+        { value: 'ASC', label: 'Ambulatory Surgery Center', desc: 'Outpatient surgical and procedural facilities' },
+        { value: 'FC', label: 'Fertility Clinic', desc: 'IVF, reproductive medicine, fertility treatment' }
       ];
-
-      // Determine which optional fields to show based on facility type
-      // V4.1: IL+AL combined into SL (Senior Living)
-      const isSNF = formData.facilityType === 'SNF';
-      const isSeniorLiving = ['SL', 'MC', 'CCRC'].includes(formData.facilityType);
 
       const handleSubmit = () => {
         // V4.13: Bot detection - honeypot field should always be empty
@@ -914,15 +875,13 @@
         }
         if (!formData.organization.trim()) newErrors.organization = 'Required';
         if (formData.organization.trim().length > 200) newErrors.organization = 'Organization name is too long';
-        if (!formData.facilityType) newErrors.facilityType = 'Please select your facility type';
+        if (!formData.facilityType) newErrors.facilityType = 'Please select your practice type';
         if (Object.keys(newErrors).length) { setErrors(newErrors); return; }
         onSubmit({
           ...formData,
           name: formData.name.trim().substring(0, 100),
           email: formData.email.trim().substring(0, 254),
-          organization: formData.organization.trim().substring(0, 200),
-          bedCount: formData.bedCount ? parseInt(formData.bedCount) : null,
-          avgMonthlyRate: parseCurrencyToNumber(formData.avgMonthlyRate)
+          organization: formData.organization.trim().substring(0, 200)
         });
       };
 
@@ -946,7 +905,7 @@
                 background: 'linear-gradient(135deg, #fff 0%, #3c8fc7 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Let's get started
               </h2>
-              <p style={{ color: 'var(--text-secondary)', fontSize: 16 }}>We'll personalize your assessment based on your community type.</p>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 16 }}>We'll personalize your assessment based on your practice type.</p>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -977,7 +936,7 @@
               <div style={{ marginTop: 12 }}>
                 <label style={{ display: 'block', marginBottom: 12, fontSize: 14, fontWeight: 600, fontFamily: "'Archivo'",
                   color: 'var(--text-secondary)' }}>
-                  What type of community are you? <span style={{ color: '#fcc93b' }}>*</span>
+                  What type of practice are you? <span style={{ color: '#fcc93b' }}>*</span>
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 10 }}>
                   {facilityOptions.map(opt => (
@@ -1000,46 +959,7 @@
                 {errors.facilityType && <div style={{ color: '#ef4444', fontSize: 13, marginTop: 8 }}>{errors.facilityType}</div>}
               </div>
 
-              {/* Segment-Conditional Optional Fields - appear after facility type is selected */}
-              {/* V4.10: Hide entire optional section for SNF - we collect context via assessment questions instead */}
-              {formData.facilityType && !isSNF && (
-                <div style={{ marginTop: 16, paddingTop: 24, borderTop: '1px solid var(--border-subtle)',
-                  animation: 'fadeIn 0.4s ease-out' }}>
-                  <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 20, height: 20, borderRadius: 6, background: 'linear-gradient(135deg, #3c8fc7, #fcc93b)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>✦</div>
-                    Optional - for personalized financial insights
-                  </div>
-
-                  <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                    {/* Beds - shown for non-SNF */}
-                    <div style={{ flex: '1 1 200px', minWidth: 180 }}>
-                      <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, fontFamily: "'Archivo'",
-                        color: focusedField === 'bedCount' ? '#3c8fc7' : 'var(--text-secondary)' }}>Number of Beds</label>
-                      <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginBottom: 6 }}>Total licensed beds/units</div>
-                      <input type="number" className="input-field" value={formData.bedCount} placeholder="e.g., 120"
-                        onWheel={(e) => e.target.blur()}
-                        onChange={handleChange('bedCount')} onFocus={() => setFocusedField('bedCount')} onBlur={() => setFocusedField(null)} />
-                    </div>
-
-                    {/* Monthly Rate - shown for Senior Living (IL, AL, MC, CCRC) */}
-                    {isSeniorLiving && (
-                      <div style={{ flex: '1 1 200px', minWidth: 180 }}>
-                        <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 600, fontFamily: "'Archivo'",
-                          color: focusedField === 'avgMonthlyRate' ? '#3c8fc7' : 'var(--text-secondary)' }}>Avg Monthly Rate</label>
-                        <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginBottom: 6 }}>Private-pay rate (typical: $5K-$10K)</div>
-                        <div style={{ position: 'relative' }}>
-                          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
-                            color: 'var(--text-tertiary)', fontSize: 15, fontWeight: 500, pointerEvents: 'none' }}>$</span>
-                          <input type="text" className="input-field" value={formData.avgMonthlyRate} placeholder="e.g., 6,500"
-                            style={{ paddingLeft: 28 }}
-                            onChange={handleCurrencyChange('avgMonthlyRate')} onFocus={() => setFocusedField('avgMonthlyRate')} onBlur={() => setFocusedField(null)} />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Financial context is collected via assessment questions (patient volume, monthly billing, AR days) */}
 
               <button className="btn-primary" onClick={handleSubmit} style={{ marginTop: 20, width: '100%' }}>
                 Continue to Assessment
@@ -1486,42 +1406,42 @@
         "Few respondents provide this level of clarity."
       ];
 
-      // Phase 1: Baseline Calibration (senior living focused)
+      // Phase 1: Baseline Calibration (ambulatory practice focused)
       const baselineQuestions = [
         {
           id: 'bl_1',
-          question: "What best describes your organization's care continuum?",
-          subtext: "This helps us benchmark against similar operators",
+          question: "What best describes your practice's organizational structure?",
+          subtext: "This helps us benchmark against similar practices",
           type: 'single',
-          options: ['Single site, single care level', 'Single site, multiple care levels', 'Multi-site, standardized operations', 'Multi-site, varied operations', 'Regional/national portfolio']
+          options: ['Solo practitioner', 'Small group (2-5 providers)', 'Mid-size group (6-20 providers)', 'Large group (20+ providers)', 'Health system employed']
         },
         {
           id: 'bl_2',
-          question: "Approximately what percentage of your residents have multiple family members involved in payment decisions?",
-          subtext: "Multi-guarantor complexity varies significantly across communities",
+          question: "Approximately what percentage of your patients have high-deductible health plans?",
+          subtext: "HDHP penetration varies significantly across practice types",
           type: 'slider',
-          min: 10, max: 90, unit: '%'
+          min: 5, max: 80, unit: '%'
         },
         {
           id: 'bl_3',
-          question: "How would you characterize your current billing technology stack?",
+          question: "How would you characterize your current billing and payment technology stack?",
           subtext: "Understanding your infrastructure helps us tailor recommendations",
           type: 'single',
-          options: ['Primarily manual/paper-based', 'Basic EHR with limited billing', 'Integrated EHR with billing module', 'Dedicated billing platform + EHR', 'Custom enterprise solution']
+          options: ['Primarily manual/paper-based', 'Basic PM system with limited billing', 'Integrated EHR/PM with billing module', 'Dedicated RCM platform + EHR', 'Custom enterprise solution']
         },
         {
           id: 'bl_4',
-          question: "What's your average days in A/R for private pay balances?",
-          subtext: "Industry benchmark is 35-45 days for high performers",
+          question: "What's your average days in A/R for patient responsibility balances?",
+          subtext: "Industry benchmark is 30-40 days for high performers",
           type: 'slider',
-          min: 15, max: 120, unit: ' days'
+          min: 10, max: 120, unit: ' days'
         },
         {
           id: 'bl_5',
-          question: "How does your organization currently handle Medicare Part A to Part B transitions from a billing perspective?",
-          subtext: "This transition point often creates family confusion",
+          question: "How does your practice currently handle patient payment communications after insurance adjudication?",
+          subtext: "This transition from insurance to patient responsibility often creates confusion",
           type: 'single',
-          options: ['Largely manual process', 'Semi-automated with manual review', 'Mostly automated', 'Fully integrated workflow', 'Not applicable to our model']
+          options: ['Largely manual process', 'Semi-automated with manual review', 'Mostly automated', 'Fully integrated workflow', 'We struggle with this']
         }
       ];
 
@@ -1532,35 +1452,35 @@
           question: "You indicated your billing approach earlier — how confident are you in that characterization?",
           subtext: "We want to ensure our benchmarking is accurate to your situation",
           type: 'single',
-          options: ['Very confident - this is well documented', 'Fairly confident - based on my experience', 'Somewhat confident - may vary by location', 'Less confident - would need to verify', 'This varies significantly across our portfolio']
+          options: ['Very confident - this is well documented', 'Fairly confident - based on my experience', 'Somewhat confident - may vary by location', 'Less confident - would need to verify', 'This varies significantly across our locations']
         },
         {
           id: 'rf_2',
-          question: "When families have billing questions, what's the typical resolution path?",
+          question: "When patients have billing questions, what's the typical resolution path?",
           subtext: "Understanding your workflow helps identify optimization opportunities",
           type: 'single',
-          options: ['Direct to billing specialist', 'Through community front desk', 'Regional support center', 'Self-service portal', 'Varies by inquiry type']
+          options: ['Direct to billing specialist', 'Through front desk staff', 'Call center/central billing', 'Self-service portal', 'Varies by inquiry type']
         },
         {
           id: 'rf_3',
-          question: "How would you rate family satisfaction with your current billing communication?",
+          question: "How would you rate patient satisfaction with your current billing and payment experience?",
           subtext: "Perception gaps often reveal process improvement opportunities",
           type: 'slider',
           min: 1, max: 10, unit: '/10'
         },
         {
           id: 'rf_4',
-          question: "What percentage of your billing staff time is spent on reactive inquiries vs. proactive outreach?",
-          subtext: "This ratio often indicates process maturity",
+          question: "What percentage of your billing staff time is spent on reactive inquiries vs. proactive denial management?",
+          subtext: "This ratio often indicates revenue cycle maturity",
           type: 'slider',
           min: 10, max: 90, unit: '% reactive'
         },
         {
           id: 'rf_5',
-          question: "If your collection rate improved by 10 percentage points, what would that mean for your organization?",
+          question: "If your patient collection rate improved by 15 percentage points, what would that mean for your practice?",
           subtext: "Understanding impact helps us prioritize recommendations",
           type: 'single',
-          options: ['Marginal operational benefit', 'Noticeable improvement to cash flow', 'Significant strategic advantage', 'Transformational for our model', 'Would need to calculate specific impact']
+          options: ['Marginal operational benefit', 'Noticeable improvement to cash flow', 'Significant strategic advantage', 'Transformational for our practice', 'Would need to calculate specific impact']
         }
       ];
 
@@ -1568,38 +1488,38 @@
       const edgeCaseQuestions = [
         {
           id: 'ec_1',
-          question: "How do you think your primary competitors would describe their billing experience compared to yours?",
+          question: "How do you think competing practices in your area handle patient billing compared to yours?",
           subtext: "Competitive positioning context helps calibrate your benchmark",
           type: 'single',
           options: ['They likely lag behind us', 'Roughly comparable', 'They may be slightly ahead', 'They\'re likely more advanced', 'Difficult to assess']
         },
         {
           id: 'ec_2',
-          question: "If you could change one thing about your billing operations tomorrow, what area would have the highest impact?",
+          question: "If you could change one thing about your revenue cycle tomorrow, what area would have the highest impact?",
           subtext: "Prioritization insights help us focus recommendations",
           type: 'single',
-          options: ['Payment method flexibility', 'Statement clarity/frequency', 'Family portal capabilities', 'Multi-payer coordination', 'Staff efficiency/automation', 'Reporting and visibility']
+          options: ['Payment method flexibility', 'Statement clarity/delivery', 'Patient portal capabilities', 'Denial management', 'Staff efficiency/automation', 'Point-of-service collection']
         },
         {
           id: 'ec_3',
-          question: "How aligned is your executive team on billing modernization priorities?",
+          question: "How aligned is your leadership team on revenue cycle modernization priorities?",
           subtext: "Organizational readiness affects implementation success",
           type: 'slider',
           min: 1, max: 10, unit: '/10'
         },
         {
           id: 'ec_4',
-          question: "What's the biggest misconception families have about your billing process?",
+          question: "What's the biggest misconception patients have about your billing process?",
           subtext: "Perception gaps often reveal communication opportunities",
           type: 'single',
-          options: ['They think it\'s more complex than it is', 'They expect more payment flexibility', 'They don\'t understand what\'s covered', 'They assume we can easily split bills', 'They expect more digital options']
+          options: ['They think it\'s more complex than it is', 'They expect more payment flexibility', 'They don\'t understand what insurance covers', 'They assume we can provide instant cost estimates', 'They expect more digital/mobile options']
         },
         {
           id: 'ec_5',
-          question: "When evaluating billing solutions, what would your CFO prioritize most?",
+          question: "When evaluating patient payment solutions, what would your leadership prioritize most?",
           subtext: "Stakeholder alignment is critical for successful initiatives",
           type: 'single',
-          options: ['Cash flow acceleration', 'Cost reduction', 'Family satisfaction scores', 'Staff productivity', 'Compliance/risk reduction', 'Integration simplicity']
+          options: ['Cash flow acceleration', 'Cost reduction', 'Patient satisfaction', 'Staff productivity', 'Bad debt reduction', 'Integration simplicity']
         }
       ];
 
@@ -1610,11 +1530,11 @@
           question: "To prepare for your personalized review, what specific challenges are you hoping to address?",
           subtext: "This helps our team prepare relevant insights",
           type: 'single',
-          options: ['Reducing days in A/R', 'Improving family satisfaction', 'Streamlining multi-guarantor billing', 'Increasing payment method options', 'Reducing staff burden', 'All of the above']
+          options: ['Reducing days in A/R', 'Improving patient payment experience', 'Reducing bad debt', 'Modernizing payment options', 'Reducing staff burden', 'All of the above']
         },
         {
           id: 'cp_2',
-          question: "What's your timeline for evaluating billing solutions?",
+          question: "What's your timeline for evaluating patient payment solutions?",
           subtext: "Understanding urgency helps us prioritize appropriately",
           type: 'single',
           options: ['Actively evaluating now', 'Planning for next quarter', 'Exploring for next fiscal year', 'Early research phase', 'No specific timeline']
@@ -1624,11 +1544,11 @@
           question: "Who else on your team would be involved in this evaluation?",
           subtext: "We want to ensure the right stakeholders receive relevant information",
           type: 'single',
-          options: ['Just me initially', 'CFO/Finance leader', 'Operations leadership', 'IT/Technology team', 'Executive committee', 'Cross-functional team']
+          options: ['Just me initially', 'CFO/Finance leader', 'Operations/Practice Manager', 'IT/Technology team', 'Physician leadership', 'Cross-functional team']
         },
         {
           id: 'cp_4',
-          question: "What solutions have you previously evaluated or implemented?",
+          question: "What patient payment solutions have you previously evaluated or implemented?",
           subtext: "Understanding your history helps us avoid redundant information",
           type: 'single',
           options: ['Haven\'t evaluated alternatives', 'Looked at options but didn\'t proceed', 'Implemented something that didn\'t work', 'Currently using a competitor solution', 'Built internal solutions', 'Prefer not to say']
@@ -1649,25 +1569,25 @@
           question: "Earlier you mentioned your billing approach — has anything changed in the last 6 months?",
           subtext: "Recent changes may affect our benchmark accuracy",
           type: 'single',
-          options: ['No significant changes', 'Minor process improvements', 'New technology implemented', 'Organizational restructuring', 'Major strategic shift']
+          options: ['No significant changes', 'Minor process improvements', 'New technology implemented', 'Staff changes', 'Major strategic shift']
         },
         {
           id: 'dc_2',
-          question: "How does your billing complexity vary between your highest and lowest acuity residents?",
-          subtext: "Acuity-based variation affects solution requirements",
+          question: "How does your patient billing complexity vary between different payer types?",
+          subtext: "Payer mix variation affects solution requirements",
           type: 'single',
-          options: ['Minimal variation', 'Somewhat different', 'Significantly different', 'Completely different workflows', 'We standardize across acuity levels']
+          options: ['Minimal variation', 'Somewhat different', 'Significantly different', 'Completely different workflows', 'We standardize across all payers']
         },
         {
           id: 'dc_3',
-          question: "What metrics does your organization track most closely for billing performance?",
+          question: "What metrics does your practice track most closely for revenue cycle performance?",
           subtext: "Understanding your KPIs helps us align recommendations",
           type: 'single',
-          options: ['Days in A/R', 'Collection rate', 'Staff time per resident', 'Family satisfaction scores', 'Write-off percentage', 'Multiple metrics equally']
+          options: ['Days in A/R', 'Collection rate', 'Denial rate', 'Clean claim rate', 'Bad debt percentage', 'Multiple metrics equally']
         },
         {
           id: 'dc_4',
-          question: "How would you describe the relationship between your billing and care teams?",
+          question: "How would you describe the relationship between your billing and clinical teams?",
           subtext: "Cross-functional dynamics affect implementation success",
           type: 'slider',
           min: 1, max: 10, unit: '/10 alignment'
@@ -1677,25 +1597,25 @@
           question: "If we could provide one data point you don't currently have, what would be most valuable?",
           subtext: "Understanding visibility gaps helps us focus insights",
           type: 'single',
-          options: ['Real-time collection forecasting', 'Family payment behavior patterns', 'Staff productivity benchmarks', 'Competitive positioning data', 'Predictive bad debt analysis']
+          options: ['Real-time collection forecasting', 'Patient payment behavior patterns', 'Staff productivity benchmarks', 'Competitive positioning data', 'Predictive bad debt analysis']
         },
         {
           id: 'dc_6',
-          question: "How does your organization balance standardization vs. community-level flexibility in billing?",
+          question: "How does your practice balance standardization vs. provider-level flexibility in patient billing?",
           subtext: "This tension affects solution architecture",
           type: 'single',
-          options: ['Highly standardized', 'Mostly standardized with exceptions', 'Balanced approach', 'Mostly community discretion', 'Fully decentralized']
+          options: ['Highly standardized', 'Mostly standardized with exceptions', 'Balanced approach', 'Mostly provider discretion', 'Fully decentralized']
         },
         {
           id: 'dc_7',
-          question: "What's the most common reason families give for late payments?",
+          question: "What's the most common reason patients give for late payments?",
           subtext: "Root cause patterns inform solution design",
           type: 'single',
-          options: ['Confusion about amounts owed', 'Coordination between family members', 'Limited payment options', 'Cash flow timing', 'Disputes about charges', 'We don\'t systematically track this']
+          options: ['Confusion about amounts owed', 'Waiting for insurance to process', 'Limited payment options', 'Cash flow timing', 'Disputes about charges', 'We don\'t systematically track this']
         },
         {
           id: 'dc_8',
-          question: "How has your billing approach evolved over the past 3 years?",
+          question: "How has your patient payment approach evolved over the past 3 years?",
           subtext: "Trajectory context helps us understand organizational momentum",
           type: 'single',
           options: ['Largely unchanged', 'Incremental improvements', 'Significant modernization', 'Complete transformation', 'Actually regressed due to challenges']
@@ -1811,7 +1731,7 @@
             <div className="glass-card" style={{ maxWidth: 500, width: '100%', padding: 60, textAlign: 'center', animation: 'scaleIn 0.6s var(--ease-out-expo)' }}>
               <div style={{ width: 64, height: 64, margin: '0 auto 32px', border: '3px solid var(--bg-tertiary)', borderTopColor: '#3c8fc7', borderRadius: '50%', animation: 'competitorSpin 1s linear infinite' }} />
               <h2 style={{ fontFamily: "'Archivo'", fontSize: 24, fontWeight: 700, marginBottom: 12, color: '#fff' }}>Initializing Assessment</h2>
-              <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.6 }}>Calibrating to your organization profile...</p>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.6 }}>Calibrating to your practice profile...</p>
             </div>
             <style>{`@keyframes competitorSpin { to { transform: rotate(360deg); } }`}</style>
           </div>
@@ -1846,7 +1766,7 @@
 
               <div style={{ background: 'rgba(60, 143, 199, 0.1)', border: '1px solid rgba(60, 143, 199, 0.2)', borderRadius: 12, padding: 24, marginBottom: 24 }}>
                 <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.7, marginBottom: 16 }}>
-                  Based on your responses, your organization demonstrates <span style={{ color: '#fff', fontWeight: 600 }}>above-average operational awareness</span> in senior living billing operations.
+                  Based on your responses, your practice demonstrates <span style={{ color: '#fff', fontWeight: 600 }}>above-average operational awareness</span> in patient billing operations.
                 </p>
                 <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.7, marginBottom: 0 }}>
                   To provide <span style={{ color: '#fcc93b' }}>precise, actionable benchmarks</span>, we need a bit more calibration data. Organizations at your level typically benefit from our deep-dive analysis.
@@ -2036,13 +1956,12 @@
       const strengths = getStrengths(scores, answers);
       const recommendations = getActionableRecommendations(answers, scores, insights);
       const projections = calculatePatientPayProjections(answers, scores);
-      const segment = answers['facility_type'];
+      const segment = answers['practice_type'];
       const benchmarks = industryBenchmarks[segment];
 
-      // V4.7: SNF uses 5 slides, others use 6
-      const useTwoCategories = scores.useTwoCategories;
-      // V4.12.2: Non-SNF now has 7 slides (added Market Context slide)
-      const totalSlides = useTwoCategories ? 5 : 7;
+      // All segments use 3 categories and 7-slide flow
+      const useTwoCategories = false;
+      const totalSlides = 7;
 
       const goToSlide = (index) => {
         if (index === currentSlide || isTransitioning || index < 0 || index >= totalSlides) return;
@@ -2162,8 +2081,8 @@
                 animation: 'fadeInUp 0.6s ease-out 0.4s both'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-                  {/* V4.12.2: Hide Payer Mix for SNF - we no longer collect this */}
-                  {segment !== 'SNF' && (
+                  {/* Payer mix context */}
+                  {segment && (
                     <div>
                       <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>Payer Mix</div>
                       <div style={{ fontSize: 15, color: 'var(--text-primary)', fontWeight: 600 }}>{segmentData.characteristics.payerMix}</div>
@@ -2185,10 +2104,10 @@
 
             {/* Category scores with benchmark indicators */}
             {(() => {
-              const segmentCategoryNames = segment === 'SNF' ? snfCategoryNames : categoryNames;
-              const displayCategories = useTwoCategories ? segmentCategoryNames.slice(0, 2) : segmentCategoryNames;
-              const gridCols = useTwoCategories ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)';
-              const displayWeights = useTwoCategories ? [0.60, 0.40] : scores.weights;
+              const segmentCategoryNames = categoryNames;
+              const displayCategories = segmentCategoryNames;
+              const gridCols = 'repeat(3, 1fr)';
+              const displayWeights = scores.weights;
               const categoryBenchmarks = [benchmarks?.operations, benchmarks?.family, benchmarks?.competitive];
 
               return (
@@ -2438,10 +2357,10 @@
               </div>
               <h2 style={{ fontFamily: "'Archivo'", fontSize: 32, fontWeight: 700, marginBottom: 10,
                 background: 'linear-gradient(135deg, #3c8fc7, #fcc93b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                What Families Are Choosing
+                What Patients Expect
               </h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.6, maxWidth: 560 }}>
-                The families choosing senior living today are digitally fluent—and their expectations reflect it.
+                Your patients live in a digital-first world — and their expectations for healthcare billing are catching up fast.
               </p>
             </div>
 
@@ -2463,12 +2382,12 @@
                 marginBottom: 12,
                 textShadow: '0 0 60px rgba(252,201,59,0.4)',
                 animation: 'statPop 0.6s ease-out 0.3s both'
-              }}>67%</div>
+              }}>56%</div>
               <div style={{ fontSize: 18, color: 'var(--text-primary)', fontWeight: 600, marginBottom: 6 }}>
-                would choose a card-accepting facility
+                of patients would switch providers
               </div>
               <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
-                over one that doesn't offer modern payment options
+                after a poor billing experience — 74% of patients under 26
               </div>
             </div>
 
@@ -2489,9 +2408,9 @@
                   lineHeight: 1,
                   marginBottom: 8,
                   animation: 'statPop 0.5s ease-out 0.4s both'
-                }}>78%</div>
+                }}>33%</div>
                 <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-                  of seniors 65+ own smartphones
+                  of workers now on HDHPs (up from 27% in just one year)
                 </div>
               </div>
 
@@ -2510,9 +2429,9 @@
                   lineHeight: 1,
                   marginBottom: 8,
                   animation: 'statPop 0.5s ease-out 0.5s both'
-                }}>70%</div>
+                }}>92%</div>
                 <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-                  of adults 50+ use FinTech apps
+                  of consumers already use digital payments
                 </div>
               </div>
             </div>
@@ -2525,16 +2444,16 @@
             }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Archivo'", color: '#8B5CF6', marginBottom: 4 }}>82%</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.3 }}>prefer digital payments</div>
+                  <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Archivo'", color: '#8B5CF6', marginBottom: 4 }}>77%</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.3 }}>want payment plans for unexpected bills</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Archivo'", color: '#3c8fc7', marginBottom: 4 }}>75%</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.3 }}>want card payment options</div>
+                  <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Archivo'", color: '#3c8fc7', marginBottom: 4 }}>37%</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.3 }}>missed bills due to complex payment systems</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Archivo'", color: '#10B981', marginBottom: 4 }}>69%</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.3 }}>willing to pay convenience fees</div>
+                  <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Archivo'", color: '#10B981', marginBottom: 4 }}>73%</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.3 }}>want retail-like convenience in healthcare</div>
                 </div>
               </div>
             </div>
@@ -2560,7 +2479,7 @@
                 Early adopters are already capturing this demand. <strong style={{ color: '#10B981' }}>Your window is open.</strong>
               </p>
               <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 12 }}>
-                Only 16% of senior living facilities have modernized their payment systems.
+                68% of providers are struggling to implement flexible payment solutions. The practices that move first win.
               </p>
             </div>
 
@@ -2637,8 +2556,8 @@
               </div>
             )}
 
-            {/* V4.11: Enhanced Financial Opportunity Summary - SNF shows detailed impact (ALL ANNUAL) */}
-            {insights && answers['facility_type'] === 'SNF' && insights.snfMonthlyBilling > 0 && (
+            {/* Financial Opportunity Summary */}
+            {insights && insights.totalFinancialOpportunity > 0 && (
               <div className="glass-card" style={{
                 padding: 32, marginBottom: 28,
                 background: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(60,143,199,0.08))',
@@ -2648,27 +2567,27 @@
                   Your Annual Patient Billing
                 </div>
                 <div style={{ fontSize: 48, fontWeight: 800, fontFamily: "'Archivo'", color: '#3c8fc7', textAlign: 'center', marginBottom: 24 }}>
-                  ${insights.snfAnnualBilling?.toLocaleString()}<span style={{ fontSize: 20, fontWeight: 500, color: 'var(--text-secondary)' }}>/year</span>
+                  ${insights.annualBilling?.toLocaleString()}<span style={{ fontSize: 20, fontWeight: 500, color: 'var(--text-secondary)' }}>/year</span>
                 </div>
 
                 {/* Current State */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
                   <div style={{ textAlign: 'center', padding: 20, background: 'rgba(239,68,68,0.1)', borderRadius: 12, border: '1px solid rgba(239,68,68,0.2)' }}>
                     <div style={{ fontSize: 32, fontWeight: 800, fontFamily: "'Archivo'", color: '#EF4444' }}>
-                      ${insights.snfCashInAR?.toLocaleString()}
+                      ${insights.cashInAR?.toLocaleString()}
                     </div>
                     <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 4 }}>Cash stuck in A/R</div>
                     <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
-                      {insights.snfCurrentARDays} days to collect
+                      {insights.arDays} days to collect
                     </div>
                   </div>
                   <div style={{ textAlign: 'center', padding: 20, background: 'rgba(245,158,11,0.1)', borderRadius: 12, border: '1px solid rgba(245,158,11,0.2)' }}>
                     <div style={{ fontSize: 32, fontWeight: 800, fontFamily: "'Archivo'", color: '#F59E0B' }}>
-                      ${insights.snfCurrentBadDebt?.toLocaleString()}
+                      ${insights.currentBadDebt?.toLocaleString()}
                     </div>
                     <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 4 }}>Annual bad debt risk</div>
                     <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
-                      ~3% of annual billing
+                      Based on industry rates
                     </div>
                   </div>
                 </div>
@@ -2681,19 +2600,19 @@
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 20 }}>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: 24, fontWeight: 800, fontFamily: "'Archivo'", color: '#10B981' }}>
-                        ${insights.snfCashFreedByARReduction?.toLocaleString()}
+                        ${insights.cashFreedByARReduction?.toLocaleString()}
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Cash freed annually</div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: 24, fontWeight: 800, fontFamily: "'Archivo'", color: '#10B981' }}>
-                        {insights.snfCurrentARDays} → {insights.snfProjectedARDays}
+                        {insights.arDays} → {insights.projectedARDays}
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>AR days (47% faster)</div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: 24, fontWeight: 800, fontFamily: "'Archivo'", color: '#10B981' }}>
-                        ${insights.snfBadDebtSavings?.toLocaleString()}
+                        ${insights.badDebtSavings?.toLocaleString()}
                       </div>
                       <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Bad debt saved/year</div>
                     </div>
@@ -2701,7 +2620,7 @@
                   <div style={{ textAlign: 'center', paddingTop: 16, borderTop: '1px solid rgba(16,185,129,0.3)' }}>
                     <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 4 }}>Total Annual Impact</div>
                     <div style={{ fontSize: 42, fontWeight: 800, fontFamily: "'Archivo'", color: '#10B981', textShadow: '0 0 30px rgba(16,185,129,0.4)' }}>
-                      ${insights.snfTotalAnnualImpact?.toLocaleString()}+
+                      ${insights.totalFinancialOpportunity?.toLocaleString()}+
                     </div>
                     <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>
                       Based on PatientPay customer results: 47% AR reduction, 40% bad debt reduction
@@ -2711,8 +2630,8 @@
               </div>
             )}
 
-            {/* Non-SNF Financial Opportunity (original) */}
-            {insights && answers['facility_type'] !== 'SNF' && (insights.potentialFreedCash > 0 || insights.cashFreedByAutopay > 0 || insights.annualCardFeesAbsorbed > 0) && (
+            {/* Additional Financial Opportunities (card fees, autopay, etc.) */}
+            {insights && (insights.autopayOpportunity > 0 || insights.annualCardFeesAbsorbed > 0) && (
               <div className="glass-card" style={{
                 padding: 28, marginBottom: 28,
                 background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(60,143,199,0.08))',
@@ -2808,7 +2727,7 @@
                   Category Score ({weight}% of overall)
                 </div>
                 <h2 style={{ fontFamily: "'Archivo'", fontSize: 32, fontWeight: 700, color: categoryColors[categoryIndex], marginBottom: 4 }}>
-                  {getCategoryName(categoryIndex, answers['facility_type'])}
+                  {getCategoryName(categoryIndex, answers['practice_type'])}
                 </h2>
                 <div style={{ fontSize: 16, color: getScoreColor(score, segment), fontWeight: 600 }}>{getScoreLevel(score, segment)}</div>
               </div>
@@ -2842,8 +2761,8 @@
             {/* V4.14: Enhanced Multi-Guarantor Opportunity Display */}
             {/* V4.6: Use "patient" for SNF, "resident" for others */}
             {categoryIndex === 1 && insights && insights.totalPayers > 0 && (() => {
-              const personTerm = answers['facility_type'] === 'SNF' ? 'patient' : 'resident';
-              const personTermPlural = answers['facility_type'] === 'SNF' ? 'Patients' : 'Residents';
+              const personTerm = 'patient';
+              const personTermPlural = 'Patients';
               const avgPayers = insights.avgPayersPerResident || 2;
               const complexityMultiplier = avgPayers.toFixed(1);
               return (
@@ -2936,7 +2855,7 @@
                   otherCategories = q.categoryWeights
                     .filter(cw => cw.index !== categoryIndex)
                     .map(cw => ({
-                      name: getCategoryName(cw.index, answers['facility_type']),
+                      name: getCategoryName(cw.index, answers['practice_type']),
                       weight: Math.round(cw.weight * 100),
                       color: categoryColors[cw.index]
                     }));
@@ -3423,9 +3342,9 @@
               </div>
             </div>
 
-            {/* V4.12.1: The Smart Operator Decision - Summary Card (Non-SNF only) */}
-            {/* V4.12.1: Added personalization bridge connecting their results to the decision */}
-            {segment !== 'SNF' && (
+            {/* The Smart Practice Decision - Summary Card */}
+            {/* Personalization bridge connecting their results to the decision */}
+            {segment && (
               <div style={{ marginTop: 28 }}>
                 {/* Personalization bridge - connects their projected score to the decision */}
                 <div style={{
@@ -3860,7 +3779,7 @@
               Next Steps
             </h2>
             <p style={{ color: 'var(--text-secondary)', marginBottom: 40, fontSize: 17 }}>
-              Ready to transform your payment operations?
+              Ready to build a more resilient practice?
             </p>
 
             {/* Download Report Card */}
@@ -3917,7 +3836,7 @@
             }}>
               <h3 style={{ fontFamily: "'Archivo'", fontSize: 28, fontWeight: 700, marginBottom: 12 }}>Ready to Get Started?</h3>
               <p style={{ color: 'var(--text-secondary)', marginBottom: 28, fontSize: 17 }}>
-                See how PatientPay can help you achieve a higher payment readiness score.
+                See how PatientPay can help you build a more resilient practice.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
                 <a
@@ -3933,7 +3852,7 @@
                   </svg>
                 </a>
                 <a
-                  href="https://marketplace.pointclickcare.com/s/accountbrand/0TU5G000000H1mhWAC/patientpay"
+                  href="https://www.patientpay.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-secondary"
@@ -3947,10 +3866,10 @@
                   }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ color: '#3c8fc7' }}>
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M9 22V12h6v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  Check out PatientPay on the PCC Marketplace
+                  Learn More About PatientPay
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.7 }}>
                     <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
@@ -3979,11 +3898,9 @@
       };
 
       const renderSlide = () => {
-        // V4.12.2: Updated emotional arc flow
-        // SNF (5 slides): Overview → Strengths → Opportunities → Improvements+Vision → Next Steps
-        // Others (7 slides): Overview → Strengths → Market Context → Opportunities → Improvements → Vision → Next Steps
-        if (useTwoCategories) {
-          // SNF: 5 slides with combined Improvements+Vision (no Market Context)
+        // All segments: 7 slides: Overview → Strengths → Market Context → Opportunities → Improvements → Vision → Next Steps
+        if (false) {
+          // Legacy SNF path - removed for resiliency assessment
           switch(currentSlide) {
             case 0: return <OverviewSlide />;
             case 1: return <StrengthsSlide />;
@@ -4071,7 +3988,7 @@
                 facilityType: data.facilityType
               });
               setFormData(data);
-              setAnswers(prev => ({ ...prev, facility_type: data.facilityType }));
+              setAnswers(prev => ({ ...prev, practice_type: data.facilityType }));
               setScreen('questions');
             }}
             onCompetitorBlocked={() => setScreen('blocked')}
@@ -4081,7 +3998,7 @@
               key={currentQuestion.id}  /* V4.10: CRITICAL - Force new component instance when question changes */
               question={currentQuestion}
               answer={answers[currentQuestion.id]}
-              selectedSegment={answers['facility_type']}
+              selectedSegment={answers['practice_type']}
               onAnswer={(id, val) => setAnswers(prev => ({ ...prev, [id]: val }))}
               onNext={(id, val) => {
                 // Use answersRef.current to get the LATEST answers (including any set by onAnswer)
@@ -4096,13 +4013,13 @@
 
                 // Check if we're done with questions
                 if (currentQIdx === -1 || nextIdx >= newVisible.length) {
-                  trackFunnelEvent('questions_completed', answersRef.current['facility_type']);
+                  trackFunnelEvent('questions_completed', answersRef.current['practice_type']);
                   setScreen('processing');
                 } else {
                   // Track halfway point (only fire once when crossing 50%)
                   const halfwayIdx = Math.floor(newVisible.length / 2);
                   if (nextIdx === halfwayIdx) {
-                    trackFunnelEvent('halfway_reached', answersRef.current['facility_type']);
+                    trackFunnelEvent('halfway_reached', answersRef.current['practice_type']);
                   }
                   setQuestionIndex(nextIdx);
                 }
@@ -4119,7 +4036,7 @@
             setScores(calculatedScores);
 
             // Track successful completion before webhook
-            trackFunnelEvent('submission_complete', answers['facility_type']);
+            trackFunnelEvent('submission_complete', answers['practice_type']);
 
             // Send data to webhook (non-blocking)
             sendWebhook(formData, answers, calculatedScores, 'index-production')
