@@ -1726,17 +1726,377 @@ function getPerformanceVsBenchmark(scores) {
 
 
 // ============================================
+// RESILIENCY INDEX
+// ============================================
+// The Resiliency Index measures how well a practice can withstand
+// external market forces it cannot control. It reframes question
+// answers through a vulnerability lens tied to 5 real market pressures.
+//
+// Resiliency Index = 100 - Composite Vulnerability
+// Composite Vulnerability = weighted avg of 5 force vulnerability scores
+// Force Vulnerability = Force Weight × (100 - Preparedness Score)
+// Preparedness Score = avg of mapped question scores for that force
+
+/**
+ * The 5 external market forces pressuring every practice
+ */
+const ResiliencyForces = [
+  {
+    id: 'patient_responsibility',
+    name: 'Rising Patient Responsibility',
+    shortName: 'Patient Responsibility',
+    icon: '📈',
+    weight: 0.25,
+    description: 'HDHP enrollment grew 22% in one year. Deductibles average $1,886. More of your revenue depends on patients paying you — not insurance.',
+    trend: 'HDHP enrollment 27% → 33% in one year, still accelerating',
+    // Question IDs that measure preparedness against this force
+    questionMap: [
+      { questionId: 'payment_options', subValues: ['autopay'], weight: 1.5, label: 'Autopay available' },
+      { questionId: 'payment_options', subValues: ['payment_plan'], weight: 1.2, label: 'Payment plans available' },
+      { questionId: 'autopay_plan_setup', weight: 1.3, label: 'Autopay/plan automation' },
+      { questionId: 'autopay_enrollment', weight: 1.0, label: 'Autopay adoption' },
+      { questionId: 'upfront_collection', weight: 1.0, label: 'Upfront collection' },
+      { questionId: 'billing_notification', weight: 0.8, label: 'Fast billing notification' },
+    ],
+    // HDHP amplifier: higher HDHP % = more exposed to this force
+    amplifier: (answers) => {
+      const hdhp = (answers['hdhp_percentage'] || 30) / 100;
+      return 0.7 + (hdhp * 0.75); // Range: 0.7 (0% HDHP) to 1.3 (80% HDHP)
+    },
+  },
+  {
+    id: 'expectation_gap',
+    name: 'Patient Expectation Gap',
+    shortName: 'Expectation Gap',
+    icon: '📱',
+    weight: 0.25,
+    description: '92% of consumers use digital payments daily. 56% would switch providers over billing. Patients expect healthcare billing to work like every other part of their life.',
+    trend: 'Digital payment adoption universal, 73% want retail convenience',
+    questionMap: [
+      { questionId: 'billing_notification', weight: 1.3, label: 'Digital-first notifications' },
+      { questionId: 'bill_clarity', weight: 1.0, label: 'Bill clarity' },
+      { questionId: 'payment_options', weight: 1.2, label: 'Payment options breadth' },
+      { questionId: 'billing_competitive', weight: 1.0, label: 'Patient perception' },
+      { questionId: 'upfront_collection', weight: 0.8, label: 'Cost transparency' },
+    ],
+    amplifier: null, // Universal pressure — no amplifier needed
+  },
+  {
+    id: 'labor_cost',
+    name: 'Labor Cost Pressure',
+    shortName: 'Labor Costs',
+    icon: '👥',
+    weight: 0.20,
+    description: 'Labor is 84% of practice expenses. Operating costs rose 11% last year. You can\'t afford to throw more people at billing — you need to automate.',
+    trend: '90% of medical groups report rising costs, 11.1% increase in 2025',
+    questionMap: [
+      { questionId: 'billing_staff_burden', weight: 1.5, label: 'Staff dependency' },
+      { questionId: 'autopay_plan_setup', weight: 1.2, label: 'Process automation' },
+      { questionId: 'billing_notification', weight: 1.0, label: 'Notification automation' },
+      { questionId: 'unpaid_and_bad_debt', weight: 0.8, label: 'Follow-up automation' },
+    ],
+    amplifier: (answers) => {
+      // More staff = more exposed to labor cost increases
+      const staff = answers['billing_staff_burden'];
+      if (staff === '3_plus') return 1.3;
+      if (staff === '1_2_dedicated') return 1.15;
+      return 1.0;
+    },
+  },
+  {
+    id: 'bad_debt_trajectory',
+    name: 'Bad Debt Acceleration',
+    shortName: 'Bad Debt',
+    icon: '📉',
+    weight: 0.20,
+    description: 'Bad debt jumped 14% last year. 58% now comes from insured patients — people who have coverage but can\'t navigate the payment process. This is accelerating.',
+    trend: 'Bad debt up 14% YoY, 58% from insured patients (5x increase)',
+    questionMap: [
+      { questionId: 'unpaid_and_bad_debt', weight: 1.5, label: 'Collection process' },
+      { questionId: 'payment_options', subValues: ['payment_plan'], weight: 1.3, label: 'Payment plans' },
+      { questionId: 'payment_options', subValues: ['autopay'], weight: 1.3, label: 'Autopay' },
+      { questionId: 'autopay_plan_setup', weight: 1.0, label: 'Plan automation' },
+      { questionId: 'billing_notification', weight: 0.8, label: 'Timely notification' },
+      { questionId: 'bill_clarity', weight: 0.7, label: 'Bill clarity' },
+    ],
+    amplifier: (answers) => {
+      // Higher current bad debt = more exposed to acceleration
+      const bd = answers['unpaid_and_bad_debt'];
+      if (bd === 'write_off_high') return 1.4;
+      if (bd === 'chase_manual' || bd === 'not_sure') return 1.2;
+      return 1.0;
+    },
+  },
+  {
+    id: 'competitive_billing',
+    name: 'Competitive Billing Pressure',
+    shortName: 'Competitive Risk',
+    icon: '🏥',
+    weight: 0.10,
+    description: '38% of patients have already switched providers over billing. 94% say billing matters for whether they return. Your competitors are modernizing.',
+    trend: '56% would switch, 74% of under-26 patients',
+    questionMap: [
+      { questionId: 'billing_competitive', weight: 1.5, label: 'Billing reputation' },
+      { questionId: 'bill_clarity', weight: 1.0, label: 'Bill clarity' },
+      { questionId: 'payment_options', weight: 1.0, label: 'Payment convenience' },
+      { questionId: 'upfront_collection', weight: 1.0, label: 'Cost transparency' },
+    ],
+    amplifier: null,
+  },
+];
+
+/**
+ * Calculate the Resiliency Index
+ * Returns: {
+ *   index: number (0-100, higher = more resilient),
+ *   level: string,
+ *   compositeVulnerability: number,
+ *   forces: [{ id, name, shortName, icon, weight, description, trend,
+ *              preparedness, vulnerability, exposure, amplifiedExposure, level }],
+ *   projectedIndex: number (with PatientPay),
+ *   projectedForces: [...],
+ *   summary: string,
+ *   methodology: string
+ * }
+ */
+function calculateResiliencyIndex(answers, scores) {
+  const segment = answers['practice_type'] || answers['facility_type'] || 'PP';
+  const visibleQuestions = getVisibleQuestions(answers);
+
+  /**
+   * Get a question's score, handling multi-select sub-value checks
+   */
+  function getQuestionPreparedness(mapping) {
+    const answer = answers[mapping.questionId];
+    const question = Questions.find(q => q.id === mapping.questionId);
+
+    // For multi-select sub-value checks (e.g., does payment_options include 'autopay'?)
+    if (mapping.subValues) {
+      if (Array.isArray(answer)) {
+        const hasAll = mapping.subValues.every(sv => answer.includes(sv));
+        return hasAll ? 85 : 5; // Binary: you offer it (85) or you don't (5)
+      }
+      return 5; // Not answered or not an array
+    }
+
+    // Standard question score
+    if (question) {
+      let score = calculateQuestionScore(question, answer);
+      if (score !== null) return score;
+      // Check autoScore for hidden conditionals
+      if (question.autoScore && question.autoScore.whenHidden) {
+        const isVisible = visibleQuestions.find(vq => vq.id === mapping.questionId);
+        if (!isVisible) return question.autoScore.score;
+      }
+    }
+    return 30; // Default if not answered
+  }
+
+  /**
+   * Calculate preparedness score for a single force
+   */
+  function calculateForcePreparedness(force) {
+    let weightedSum = 0;
+    let totalWeight = 0;
+
+    force.questionMap.forEach(mapping => {
+      const prep = getQuestionPreparedness(mapping);
+      weightedSum += prep * mapping.weight;
+      totalWeight += mapping.weight;
+    });
+
+    return totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 30;
+  }
+
+  // Calculate each force
+  const forces = ResiliencyForces.map(force => {
+    const preparedness = calculateForcePreparedness(force);
+    const rawExposure = 100 - preparedness; // 0 = fully protected, 100 = fully exposed
+
+    // Apply amplifier if present
+    const amplifier = force.amplifier ? force.amplifier(answers) : 1.0;
+    const amplifiedExposure = Math.min(100, Math.round(rawExposure * amplifier));
+
+    // Weighted vulnerability contribution
+    const vulnerability = Math.round(force.weight * amplifiedExposure);
+
+    // Level label
+    let level;
+    if (amplifiedExposure <= 20) level = 'Well Protected';
+    else if (amplifiedExposure <= 40) level = 'Moderately Protected';
+    else if (amplifiedExposure <= 60) level = 'Partially Exposed';
+    else if (amplifiedExposure <= 80) level = 'Significantly Exposed';
+    else level = 'Highly Vulnerable';
+
+    return {
+      id: force.id,
+      name: force.name,
+      shortName: force.shortName,
+      icon: force.icon,
+      weight: force.weight,
+      description: force.description,
+      trend: force.trend,
+      preparedness,
+      exposure: rawExposure,
+      amplifiedExposure,
+      vulnerability,
+      level,
+    };
+  });
+
+  // Composite vulnerability = sum of all weighted vulnerabilities
+  const compositeVulnerability = forces.reduce((sum, f) => sum + f.vulnerability, 0);
+
+  // Resiliency Index = 100 - composite vulnerability
+  const index = Math.max(0, Math.min(100, 100 - compositeVulnerability));
+
+  // Index level
+  let level;
+  if (index >= 80) level = 'Highly Resilient';
+  else if (index >= 65) level = 'Resilient';
+  else if (index >= 45) level = 'Moderately Resilient';
+  else if (index >= 25) level = 'Vulnerable';
+  else level = 'Highly Vulnerable';
+
+  // --- Projected index with PatientPay ---
+  const improvements = PatientPayProjectionConfig.scoreImprovements;
+
+  function getProjectedPreparedness(mapping) {
+    let current = getQuestionPreparedness(mapping);
+
+    // For sub-value checks, PatientPay enables autopay and payment plans
+    if (mapping.subValues) {
+      if (mapping.subValues.includes('autopay') || mapping.subValues.includes('payment_plan')) {
+        return 85; // PatientPay provides both
+      }
+    }
+
+    // Apply score improvement if available
+    const imp = improvements[mapping.questionId];
+    if (imp) {
+      return Math.min(imp.maxScore, current + imp.boost);
+    }
+    return current;
+  }
+
+  function calculateProjectedForcePreparedness(force) {
+    let weightedSum = 0;
+    let totalWeight = 0;
+
+    force.questionMap.forEach(mapping => {
+      const prep = getProjectedPreparedness(mapping);
+      weightedSum += prep * mapping.weight;
+      totalWeight += mapping.weight;
+    });
+
+    return totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 50;
+  }
+
+  const projectedForces = ResiliencyForces.map(force => {
+    const preparedness = calculateProjectedForcePreparedness(force);
+    const rawExposure = 100 - preparedness;
+    // Amplifiers are reduced with PatientPay (automation reduces staff dependency, etc.)
+    const amplifier = force.amplifier ? Math.max(1.0, force.amplifier(answers) * 0.7) : 1.0;
+    const amplifiedExposure = Math.min(100, Math.round(rawExposure * amplifier));
+    const vulnerability = Math.round(force.weight * amplifiedExposure);
+
+    let projLevel;
+    if (amplifiedExposure <= 20) projLevel = 'Well Protected';
+    else if (amplifiedExposure <= 40) projLevel = 'Moderately Protected';
+    else if (amplifiedExposure <= 60) projLevel = 'Partially Exposed';
+    else if (amplifiedExposure <= 80) projLevel = 'Significantly Exposed';
+    else projLevel = 'Highly Vulnerable';
+
+    return {
+      id: force.id,
+      name: force.name,
+      shortName: force.shortName,
+      icon: force.icon,
+      weight: force.weight,
+      preparedness,
+      exposure: rawExposure,
+      amplifiedExposure,
+      vulnerability,
+      level: projLevel,
+    };
+  });
+
+  const projectedVulnerability = projectedForces.reduce((sum, f) => sum + f.vulnerability, 0);
+  const projectedIndex = Math.max(0, Math.min(100, 100 - projectedVulnerability));
+
+  // Summary narrative
+  const mostVulnerable = [...forces].sort((a, b) => b.amplifiedExposure - a.amplifiedExposure)[0];
+  const mostProtected = [...forces].sort((a, b) => a.amplifiedExposure - b.amplifiedExposure)[0];
+
+  let summary;
+  if (index >= 65) {
+    summary = `Your practice shows strong resilience against external market pressures. Your strongest protection is against ${mostProtected.name.toLowerCase()}. Continue building on these foundations.`;
+  } else if (index >= 40) {
+    summary = `Your practice has moderate resilience, but significant exposure to ${mostVulnerable.name.toLowerCase()}. The market forces affecting patient billing are accelerating — closing these gaps now protects your revenue.`;
+  } else {
+    summary = `Your practice is significantly exposed to the market forces reshaping healthcare billing. Your biggest vulnerability is ${mostVulnerable.name.toLowerCase()} — and these pressures are accelerating. The good news: these are all things within your control to address.`;
+  }
+
+  const methodology = 'The Resiliency Index measures your practice\'s preparedness against 5 external market forces — rising patient responsibility, digital payment expectations, labor costs, bad debt trends, and competitive billing pressure. Each force is weighted by its acceleration rate and amplified by your specific exposure (e.g., higher HDHP percentage increases your patient responsibility vulnerability). Your answers determine your preparedness score per force, and the index reflects how well-protected your practice is against these forces you cannot control — but can prepare for.';
+
+  return {
+    index,
+    level,
+    compositeVulnerability,
+    forces,
+    projectedIndex,
+    projectedForces,
+    projectedImprovement: projectedIndex - index,
+    summary,
+    methodology,
+    mostVulnerable,
+    mostProtected,
+  };
+}
+
+/**
+ * Get Resiliency Index color
+ */
+function getResiliencyColor(index) {
+  if (index >= 80) return '#10B981';
+  if (index >= 65) return '#3c8fc7';
+  if (index >= 45) return '#F59E0B';
+  if (index >= 25) return '#EF4444';
+  return '#DC2626';
+}
+
+/**
+ * Get vulnerability bar color (inverse — high exposure = red)
+ */
+function getExposureColor(exposure) {
+  if (exposure <= 20) return '#10B981';
+  if (exposure <= 40) return '#3c8fc7';
+  if (exposure <= 60) return '#F59E0B';
+  if (exposure <= 80) return '#EF4444';
+  return '#DC2626';
+}
+
+
+// ============================================
 // RESULTS SUMMARY GENERATOR
 // ============================================
 
-function generateResultsSummary(scores, insights, recommendations) {
+function generateResultsSummary(scores, insights, recommendations, answers) {
   const level = getScoreLevel(scores.overall);
+  const ri = answers ? calculateResiliencyIndex(answers, scores) : null;
   return {
-    headline: `Your Financial Resiliency Score: ${scores.overall}/100`,
+    headline: ri ? `Your Resiliency Index: ${ri.index}/100` : `Your Financial Resiliency Score: ${scores.overall}/100`,
+    resiliencyIndex: ri ? ri.index : null,
+    resiliencyLevel: ri ? ri.level : null,
     level,
-    summary: `Your practice scored ${scores.overall} out of 100 on the Financial Resiliency Assessment, placing you in the "${level}" category. ` +
-      `With $${insights.annualBilling?.toLocaleString()} in annual patient billing, ` +
-      `there's an estimated $${insights.totalFinancialOpportunity?.toLocaleString()} annual opportunity to improve.`,
+    summary: ri
+      ? `Your practice's Resiliency Index is ${ri.index}/100 (${ri.level}). Your payment readiness score is ${scores.overall}/100. ` +
+        `With $${insights.annualBilling?.toLocaleString()} in annual patient billing, ` +
+        `there's an estimated $${insights.totalFinancialOpportunity?.toLocaleString()} annual opportunity to improve. ` +
+        `Your biggest vulnerability: ${ri.mostVulnerable.name.toLowerCase()}.`
+      : `Your practice scored ${scores.overall} out of 100 on the Financial Resiliency Assessment, placing you in the "${level}" category. ` +
+        `With $${insights.annualBilling?.toLocaleString()} in annual patient billing, ` +
+        `there's an estimated $${insights.totalFinancialOpportunity?.toLocaleString()} annual opportunity to improve.`,
     topRecommendations: recommendations.slice(0, 3).map(r => r.title),
   };
 }
@@ -1773,6 +2133,16 @@ function prepareExportData(formData, answers, scores, insights) {
       badDebtRate: insights.badDebtRate,
       currentBadDebt: insights.currentBadDebt,
     },
+    resiliencyIndex: (() => {
+      const ri = calculateResiliencyIndex(answers, scores);
+      return {
+        index: ri.index,
+        level: ri.level,
+        projectedIndex: ri.projectedIndex,
+        projectedImprovement: ri.projectedImprovement,
+        forces: ri.forces.map(f => ({ id: f.id, name: f.name, exposure: f.amplifiedExposure, level: f.level })),
+      };
+    })(),
     version: '2.0',
   };
 }
@@ -1867,15 +2237,27 @@ function generatePDFReport(formData, answers, scores, insights, recommendations,
   doc.text(`${practiceLabel} | ${new Date().toLocaleDateString()}`, margin, y);
   y += 20;
 
-  // Overall score
-  doc.setFillColor(240, 247, 255);
-  doc.roundedRect(margin, y, contentWidth, 35, 3, 3, 'F');
+  // Resiliency Index (hero)
+  const resiliency = calculateResiliencyIndex(answers, scores);
+  doc.setFillColor(7, 33, 64);
+  doc.roundedRect(margin, y, contentWidth, 42, 3, 3, 'F');
   doc.setFontSize(36);
   doc.setTextColor(60, 143, 199);
-  doc.text(`${scores.overall}`, margin + contentWidth / 2, y + 22, { align: 'center' });
+  doc.text(`${resiliency.index}`, margin + contentWidth / 2, y + 22, { align: 'center' });
   doc.setFontSize(12);
-  doc.text(`Overall Score — ${getScoreLevel(scores.overall)}`, margin + contentWidth / 2, y + 30, { align: 'center' });
-  y += 45;
+  doc.setTextColor(200);
+  doc.text(`Resiliency Index — ${resiliency.level}`, margin + contentWidth / 2, y + 34, { align: 'center' });
+  y += 50;
+
+  // Overall Payment Readiness Score
+  doc.setFillColor(240, 247, 255);
+  doc.roundedRect(margin, y, contentWidth, 28, 3, 3, 'F');
+  doc.setFontSize(24);
+  doc.setTextColor(60, 143, 199);
+  doc.text(`${scores.overall}`, margin + contentWidth / 2, y + 16, { align: 'center' });
+  doc.setFontSize(10);
+  doc.text(`Payment Readiness Score — ${getScoreLevel(scores.overall)}`, margin + contentWidth / 2, y + 24, { align: 'center' });
+  y += 35;
 
   // Category scores
   const catColors = [[60, 143, 199], [139, 92, 246], [252, 201, 59]];
@@ -1888,6 +2270,36 @@ function generatePDFReport(formData, answers, scores, insights, recommendations,
     y += 16;
   });
   y += 10;
+
+  // Resiliency Force Breakdown
+  doc.setFontSize(14);
+  doc.setTextColor(7, 33, 64);
+  doc.text('Resiliency Force Breakdown', margin, y);
+  y += 8;
+  doc.setFontSize(9);
+  doc.setTextColor(80);
+  resiliency.forces.forEach(force => {
+    const barWidth = Math.round((force.amplifiedExposure / 100) * (contentWidth - 80));
+    doc.text(`${force.icon} ${force.shortName}`, margin, y + 3);
+    // Exposure bar
+    doc.setFillColor(220, 220, 220);
+    doc.roundedRect(margin + 55, y, contentWidth - 80, 6, 1, 1, 'F');
+    if (force.amplifiedExposure > 60) doc.setFillColor(239, 68, 68);
+    else if (force.amplifiedExposure > 40) doc.setFillColor(245, 158, 11);
+    else if (force.amplifiedExposure > 20) doc.setFillColor(60, 143, 199);
+    else doc.setFillColor(16, 185, 129);
+    doc.roundedRect(margin + 55, y, barWidth, 6, 1, 1, 'F');
+    doc.setTextColor(80);
+    doc.text(`${force.amplifiedExposure}%  ${force.level}`, margin + contentWidth - 20, y + 4, { align: 'right' });
+    y += 10;
+  });
+  y += 6;
+
+  // Projected Resiliency with PatientPay
+  doc.setFontSize(10);
+  doc.setTextColor(16, 185, 129);
+  doc.text(`With PatientPay: Resiliency Index ${resiliency.index} → ${resiliency.projectedIndex} (+${resiliency.projectedImprovement} points)`, margin, y);
+  y += 12;
 
   // Financial snapshot
   doc.setFontSize(14);
@@ -2018,6 +2430,12 @@ window.AssessmentEngine = {
   calculatePatientPayProjections,
   getPerformanceVsBenchmark,
   generateResultsSummary,
+
+  // Resiliency Index
+  resiliencyForces: ResiliencyForces,
+  calculateResiliencyIndex,
+  getResiliencyColor,
+  getExposureColor,
 
   // Export functions
   prepareExportData,

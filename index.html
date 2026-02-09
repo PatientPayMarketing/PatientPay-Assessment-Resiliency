@@ -521,7 +521,10 @@
       prepareExportData,
       generateCSV,
       downloadPDFReport,
-      sendWebhook
+      sendWebhook,
+      calculateResiliencyIndex,
+      getResiliencyColor,
+      getExposureColor
     } = window.AssessmentEngine;
 
     // Backwards compat aliases
@@ -1956,12 +1959,13 @@
       const strengths = getStrengths(scores, answers);
       const recommendations = getActionableRecommendations(answers, scores, insights);
       const projections = calculatePatientPayProjections(answers, scores);
+      const resiliencyIndex = calculateResiliencyIndex(answers, scores);
       const segment = answers['practice_type'];
       const benchmarks = industryBenchmarks[segment];
 
-      // All segments use 3 categories and 7-slide flow
+      // All segments use 3 categories and 8-slide flow (added Resiliency slide)
       const useTwoCategories = false;
-      const totalSlides = 7;
+      const totalSlides = 8;
 
       const goToSlide = (index) => {
         if (index === currentSlide || isTransitioning || index < 0 || index >= totalSlides) return;
@@ -2020,58 +2024,84 @@
             <div style={{ fontSize: 14, fontFamily: "'Archivo'", color: 'var(--text-tertiary)', letterSpacing: 3, textTransform: 'uppercase', marginBottom: 18 }}>
               Assessment Complete
             </div>
-            <h1 style={{ fontFamily: "'Archivo'", fontSize: 'clamp(36px, 5vw, 52px)', fontWeight: 800, marginBottom: 32,
+            <h1 style={{ fontFamily: "'Archivo'", fontSize: 'clamp(32px, 4.5vw, 46px)', fontWeight: 800, marginBottom: 12,
               background: 'linear-gradient(135deg, #fff, #3c8fc7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Your Payment Readiness Score
+              Your Financial Resiliency Index
             </h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.5, maxWidth: 540, margin: '0 auto 28px', animation: 'fadeInUp 0.5s ease-out 0.1s both' }}>
+              How prepared your practice is to withstand the market forces you can't control.
+            </p>
 
-            <div style={{ position: 'relative', width: 280, height: 280, margin: '0 auto 24px' }}>
-              <div style={{ position: 'absolute', inset: -20, borderRadius: '50%', background: `radial-gradient(circle, ${getScoreColor(scores.overall, segment)}30 0%, transparent 70%)`,
+            {/* Resiliency Index — Hero Display */}
+            <div style={{ position: 'relative', width: 280, height: 280, margin: '0 auto 16px' }}>
+              <div style={{ position: 'absolute', inset: -20, borderRadius: '50%', background: `radial-gradient(circle, ${getResiliencyColor(resiliencyIndex.index)}30 0%, transparent 70%)`,
                 animation: 'celebratePulse 2s ease-in-out infinite' }} />
-              <ProgressRing progress={scores.overall} size={280} strokeWidth={16} delay={300} />
+              <ProgressRing progress={resiliencyIndex.index} size={280} strokeWidth={16} delay={300} />
               <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ fontSize: 72, fontWeight: 800, fontFamily: "'Archivo'", color: getScoreColor(scores.overall, segment),
-                  textShadow: `0 0 50px ${getScoreColor(scores.overall, segment)}50`, animation: 'numberPop 0.8s ease-out 0.5s both' }}>
-                  <AnimatedNumber value={scores.overall} delay={500} />
+                <div style={{ fontSize: 72, fontWeight: 800, fontFamily: "'Archivo'", color: getResiliencyColor(resiliencyIndex.index),
+                  textShadow: `0 0 50px ${getResiliencyColor(resiliencyIndex.index)}50`, animation: 'numberPop 0.8s ease-out 0.5s both' }}>
+                  <AnimatedNumber value={resiliencyIndex.index} delay={500} />
                 </div>
-                <div style={{ fontSize: 20, fontFamily: "'Archivo'", color: getScoreColor(scores.overall, segment), fontWeight: 700 }}>
-                  {getScoreLevel(scores.overall, segment)}
+                <div style={{ fontSize: 18, fontFamily: "'Archivo'", color: getResiliencyColor(resiliencyIndex.index), fontWeight: 700 }}>
+                  {resiliencyIndex.level}
                 </div>
               </div>
             </div>
 
-            {/* V4.7: Benchmark Comparison */}
-            {benchmarks && (
+            {/* Projected improvement with PatientPay */}
+            {resiliencyIndex.projectedImprovement > 0 && (
               <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 12, padding: '12px 24px',
-                background: overallGap >= 0 ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)',
-                border: `1px solid ${overallGap >= 0 ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}`,
-                borderRadius: 12, marginBottom: 32,
+                display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 20px',
+                background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
+                borderRadius: 100, marginBottom: 24,
                 animation: 'fadeInUp 0.6s ease-out 0.3s both'
               }}>
-                <span style={{ fontSize: 15, color: 'var(--text-secondary)' }}>
-                  You: <strong style={{ color: 'var(--text-primary)' }}>{scores.overall}</strong>
-                </span>
-                <span style={{ color: 'var(--text-muted)' }}>|</span>
-                <span style={{ fontSize: 15, color: 'var(--text-secondary)' }}>
-                  {benchmarks.label} Average: <strong style={{ color: 'var(--text-primary)' }}>{benchmarks.overall}</strong>
+                <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>With PatientPay:</span>
+                <span style={{ fontSize: 16, fontWeight: 800, color: '#10B981' }}>
+                  {resiliencyIndex.projectedIndex}
                 </span>
                 <span style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 4,
-                  padding: '4px 10px', borderRadius: 100,
-                  background: overallGap >= 0 ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)',
-                  color: overallGap >= 0 ? '#10B981' : '#F59E0B',
-                  fontSize: 13, fontWeight: 700
+                  padding: '3px 10px', borderRadius: 100,
+                  background: 'rgba(16,185,129,0.2)', color: '#10B981',
+                  fontSize: 12, fontWeight: 700
                 }}>
-                  {overallGap >= 0 ? (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 15l-6-6-6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  ) : (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  )}
-                  {overallGap >= 0 ? '+' : ''}{overallGap}
+                  +{resiliencyIndex.projectedImprovement} pts
                 </span>
               </div>
             )}
+
+            {/* Payment Readiness Score (sub-hero) */}
+            <div className="glass-card" style={{
+              padding: 20, marginBottom: 20, textAlign: 'center',
+              background: `${getScoreColor(scores.overall, segment)}08`,
+              border: `1px solid ${getScoreColor(scores.overall, segment)}25`,
+              animation: 'fadeInUp 0.6s ease-out 0.4s both'
+            }}>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8 }}>
+                Payment Readiness Score
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
+                <div style={{ fontSize: 44, fontWeight: 800, fontFamily: "'Archivo'", color: getScoreColor(scores.overall, segment) }}>
+                  <AnimatedNumber value={scores.overall} delay={800} />
+                </div>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: getScoreColor(scores.overall, segment) }}>
+                    {getScoreLevel(scores.overall, segment)}
+                  </div>
+                  {benchmarks && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>vs {benchmarks.label} avg: {benchmarks.overall}</span>
+                      <span style={{
+                        fontSize: 11, fontWeight: 700,
+                        color: overallGap >= 0 ? '#10B981' : '#F59E0B'
+                      }}>
+                        {overallGap >= 0 ? '+' : ''}{overallGap}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {/* Segment context card - V4.12.2: SNF no longer shows Payer Mix (moved away from that input) */}
             {segmentData && (
@@ -2488,7 +2518,157 @@
         );
       };
 
-      // Slide 3 (was 2): Your Opportunities (V4.7 - Refactored from Gaps)
+      // Slide 3: Resiliency Index Deep Dive — 5-Force Vulnerability Breakdown
+      const ResiliencySlide = () => {
+        return (
+          <div>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ fontSize: 14, fontFamily: "'Archivo'", color: getResiliencyColor(resiliencyIndex.index), letterSpacing: 2, textTransform: 'uppercase', marginBottom: 10 }}>
+                Your Resiliency Breakdown
+              </div>
+              <h2 style={{ fontFamily: "'Archivo'", fontSize: 32, fontWeight: 700, marginBottom: 10,
+                background: 'linear-gradient(135deg, #3c8fc7, #F59E0B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                5 Forces Threatening Your Revenue
+              </h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.6, maxWidth: 560 }}>
+                {resiliencyIndex.summary}
+              </p>
+            </div>
+
+            {/* Force Vulnerability Cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 28 }}>
+              {resiliencyIndex.forces.map((force, i) => {
+                const projForce = resiliencyIndex.projectedForces[i];
+                const improvement = force.amplifiedExposure - projForce.amplifiedExposure;
+                return (
+                  <div key={force.id} className="glass-card" style={{
+                    padding: 20,
+                    animation: `slideInRight 0.5s ease-out ${i * 0.08}s both`,
+                    borderLeft: `4px solid ${getExposureColor(force.amplifiedExposure)}`
+                  }}>
+                    {/* Force Header */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 12 }}>
+                      <div style={{
+                        width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                        background: `${getExposureColor(force.amplifiedExposure)}15`,
+                        border: `1px solid ${getExposureColor(force.amplifiedExposure)}30`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 20
+                      }}>
+                        {force.icon}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                          <h4 style={{ fontFamily: "'Archivo'", fontSize: 15, fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                            {force.name}
+                          </h4>
+                          <span style={{
+                            padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 700,
+                            background: `${getExposureColor(force.amplifiedExposure)}15`,
+                            color: getExposureColor(force.amplifiedExposure)
+                          }}>
+                            {force.level}
+                          </span>
+                        </div>
+                        <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.4, margin: 0 }}>
+                          {force.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Exposure Bar */}
+                    <div style={{ marginBottom: 10 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                        <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>
+                          Exposure Level ({Math.round(force.weight * 100)}% weight)
+                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: getExposureColor(force.amplifiedExposure) }}>
+                            {force.amplifiedExposure}%
+                          </span>
+                          {improvement > 0 && (
+                            <span style={{ fontSize: 11, color: '#10B981', fontWeight: 600 }}>
+                              → {projForce.amplifiedExposure}% with PP
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div style={{ position: 'relative', height: 8, background: 'rgba(255,255,255,0.05)', borderRadius: 4, overflow: 'hidden' }}>
+                        {/* Current exposure */}
+                        <div style={{
+                          position: 'absolute', left: 0, top: 0, height: '100%', borderRadius: 4,
+                          width: `${force.amplifiedExposure}%`,
+                          background: `linear-gradient(90deg, ${getExposureColor(force.amplifiedExposure)}80, ${getExposureColor(force.amplifiedExposure)})`,
+                          transition: 'width 0.8s ease-out'
+                        }} />
+                        {/* Projected exposure (overlay, lighter) */}
+                        {improvement > 0 && (
+                          <div style={{
+                            position: 'absolute', left: 0, top: 0, height: '100%', borderRadius: 4,
+                            width: `${projForce.amplifiedExposure}%`,
+                            background: 'rgba(16,185,129,0.5)',
+                            borderRight: '2px solid #10B981'
+                          }} />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Trend indicator */}
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style={{ color: '#F59E0B' }}>
+                        <path d="M23 6l-9.5 9.5-5-5L1 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M17 6h6v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span>{force.trend}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Resiliency Summary Card */}
+            <div className="glass-card" style={{
+              padding: 24, textAlign: 'center',
+              background: `linear-gradient(135deg, ${getResiliencyColor(resiliencyIndex.index)}12, ${getResiliencyColor(resiliencyIndex.index)}04)`,
+              border: `1px solid ${getResiliencyColor(resiliencyIndex.index)}30`
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, flexWrap: 'wrap' }}>
+                {/* Current Index */}
+                <div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Current Index</div>
+                  <div style={{ fontSize: 36, fontWeight: 800, fontFamily: "'Archivo'", color: getResiliencyColor(resiliencyIndex.index) }}>
+                    {resiliencyIndex.index}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ color: '#10B981' }}>
+                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#10B981', marginTop: 2 }}>
+                    +{resiliencyIndex.projectedImprovement}
+                  </span>
+                </div>
+                {/* Projected Index */}
+                <div>
+                  <div style={{ fontSize: 11, color: '#10B981', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4, fontWeight: 600 }}>With PatientPay</div>
+                  <div style={{ fontSize: 36, fontWeight: 800, fontFamily: "'Archivo'", color: '#10B981', textShadow: '0 0 20px rgba(16,185,129,0.3)' }}>
+                    {resiliencyIndex.projectedIndex}
+                  </div>
+                </div>
+              </div>
+              <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${getResiliencyColor(resiliencyIndex.index)}20` }}>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 500, margin: '0 auto' }}>
+                  Every point of improvement reduces your exposure to market forces that are accelerating — not slowing down.
+                </p>
+              </div>
+            </div>
+
+            <NavButtons />
+          </div>
+        );
+      };
+
+      // Slide 4 (was 3): Your Opportunities (V4.7 - Refactored from Gaps)
       const OpportunitiesSlide = () => {
         // Get categories below benchmark, ordered by category index (Ops → Family → Competitive)
         const opportunityCategories = gapAnalysis ? gapAnalysis.categories
@@ -3313,6 +3493,60 @@
               ))}
             </div>
 
+            {/* Resiliency Index Projection */}
+            <div className="glass-card" style={{
+              padding: 24, marginBottom: 20,
+              background: `linear-gradient(135deg, ${getResiliencyColor(resiliencyIndex.index)}10, rgba(16,185,129,0.06))`,
+              border: `1px solid ${getResiliencyColor(resiliencyIndex.index)}25`,
+              animation: 'fadeInUp 0.5s ease-out 0.3s both'
+            }}>
+              <h4 style={{ fontFamily: "'Archivo'", fontSize: 13, fontWeight: 600, marginBottom: 14, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }}>
+                Resiliency Index Impact
+              </h4>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 14 }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Archivo'", color: getResiliencyColor(resiliencyIndex.index) }}>
+                    {resiliencyIndex.index}
+                  </div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Current</div>
+                </div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ color: '#10B981' }}>
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Archivo'", color: '#10B981', textShadow: '0 0 15px rgba(16,185,129,0.3)' }}>
+                    {resiliencyIndex.projectedIndex}
+                  </div>
+                  <div style={{ fontSize: 11, color: '#10B981', fontWeight: 600 }}>Projected</div>
+                </div>
+              </div>
+              {/* Mini force reduction bars */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 6 }}>
+                {resiliencyIndex.forces.map((force, i) => {
+                  const projForce = resiliencyIndex.projectedForces[i];
+                  return (
+                    <div key={force.id} style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: 14, marginBottom: 4 }}>{force.icon}</div>
+                      <div style={{ position: 'relative', height: 4, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden', marginBottom: 4 }}>
+                        <div style={{
+                          position: 'absolute', left: 0, top: 0, height: '100%', borderRadius: 2,
+                          width: `${force.amplifiedExposure}%`,
+                          background: getExposureColor(force.amplifiedExposure),
+                          opacity: 0.4
+                        }} />
+                        <div style={{
+                          position: 'absolute', left: 0, top: 0, height: '100%', borderRadius: 2,
+                          width: `${projForce.amplifiedExposure}%`,
+                          background: '#10B981'
+                        }} />
+                      </div>
+                      <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>{force.shortName}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Key Capabilities - Compact */}
             <div className="glass-card" style={{ padding: 20 }}>
               <h4 style={{ fontFamily: "'Archivo'", fontSize: 13, fontWeight: 600, marginBottom: 14, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1 }}>
@@ -3320,11 +3554,12 @@
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
                 {[
-                  { icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2', label: 'Multi-Guarantor Billing' },
                   { icon: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6', label: 'Automated Payments' },
                   { icon: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12', label: 'Digital Statements' },
                   { icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z', label: 'Convenience Fee Pass-Through' },
-                  { icon: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2', label: 'Family Portal' }
+                  { icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2', label: 'Auto-Pay & Payment Plans' },
+                  { icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', label: 'Auto Dunning Engine' },
+                  { icon: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2', label: 'Patient Self-Service Portal' }
                 ].map((cap, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, animation: `fadeIn 0.4s ease-out ${0.6 + i * 0.1}s both` }}>
                     <div style={{
@@ -3463,7 +3698,7 @@
                         Improve Efficiency
                       </div>
                       <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>
-                        96% reduction in processing time • Real-time PCC integration
+                        96% reduction in processing time • Automated billing workflows
                       </div>
                     </div>
 
@@ -3491,7 +3726,7 @@
                         Elevate Experience
                       </div>
                       <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>
-                        Multi-guarantor billing • Individual statements per family
+                        Digital-first billing • Clear statements patients actually pay
                       </div>
                     </div>
 
@@ -3519,7 +3754,7 @@
                         Gain Preference
                       </div>
                       <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>
-                        Stand out during tours • Meet modern expectations
+                        Retain patients • Differentiate on billing experience
                       </div>
                     </div>
                   </div>
@@ -3552,7 +3787,7 @@
                         cursor: 'pointer',
                         display: 'inline-block'
                       }}>
-                        see how 400+ facilities have modernized their billing →
+                        see how 400+ practices have modernized their billing →
                       </span>
                     </div>
                   </div>
@@ -3910,15 +4145,16 @@
             default: return <OverviewSlide />;
           }
         } else {
-          // Standard: 7 slides with Market Context after Strengths
+          // Standard: 8 slides with Resiliency Index deep dive after Market Context
           switch(currentSlide) {
             case 0: return <OverviewSlide />;
             case 1: return <StrengthsSlide />;
-            case 2: return <MarketContextSlide />;  // V4.12.2: NEW - dedicated slide
-            case 3: return <OpportunitiesSlide />;
-            case 4: return <ImprovementsSlide />;
-            case 5: return <VisionSlide />;
-            case 6: return <NextStepsSlide />;
+            case 2: return <MarketContextSlide />;
+            case 3: return <ResiliencySlide />;        // NEW: 5-force vulnerability breakdown
+            case 4: return <OpportunitiesSlide />;
+            case 5: return <ImprovementsSlide />;
+            case 6: return <VisionSlide />;
+            case 7: return <NextStepsSlide />;
             default: return <OverviewSlide />;
           }
         }
