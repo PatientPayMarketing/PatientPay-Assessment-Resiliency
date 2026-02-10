@@ -719,12 +719,13 @@ const Questions = [
 
 
 // ============================================
-// RESULTS FLOW (7 slides)
+// RESULTS FLOW (8 slides)
 // ============================================
 const ResultsFlow = [
   { id: 'overview', title: 'Your Score', component: 'OverviewSlide' },
   { id: 'strengths', title: 'Your Strengths', component: 'StrengthsSlide' },
   { id: 'market', title: 'Market Context', component: 'MarketContextSlide' },
+  { id: 'resiliency', title: '5 Forces', component: 'ResiliencySlide' },
   { id: 'opportunities', title: 'Opportunities', component: 'OpportunitiesSlide' },
   { id: 'improvements', title: 'Improvements', component: 'ImprovementsSlide' },
   { id: 'vision', title: 'Your Path Forward', component: 'VisionSlide' },
@@ -1105,17 +1106,6 @@ function calculateScores(answers) {
     if (q.isDiagnostic || q.isRoutingQuestion) return;
 
     let score = calculateQuestionScore(q, answers[q.id]);
-
-    // Handle autoScore for hidden conditional questions
-    if (score === null && q.autoScore && q.autoScore.whenHidden) {
-      // Check if this question SHOULD be visible but wasn't answered
-      // vs. hidden by conditional logic
-      const isConditionallyHidden = q.conditional && !visibleQuestions.find(vq => vq.id === q.id);
-      if (isConditionallyHidden) {
-        score = q.autoScore.score;
-      }
-    }
-
     if (score === null) return;
 
     // Cross-category scoring
@@ -1193,10 +1183,11 @@ function getScoreLevel(score, segment) {
  * Get score color
  */
 function getScoreColor(score, segment) {
-  if (score >= 80) return '#10B981';
-  if (score >= 60) return '#3c8fc7';
-  if (score >= 40) return '#F59E0B';
-  return '#EF4444';
+  if (score >= 85) return '#10B981';
+  if (score >= 70) return '#3c8fc7';
+  if (score >= 55) return '#F59E0B';
+  if (score >= 40) return '#EF4444';
+  return '#DC2626';
 }
 
 /**
@@ -1541,6 +1532,22 @@ function getActionableRecommendations(answers, scores, insights) {
   });
 
   adjusted.sort((a, b) => b.adjustedPriority - a.adjustedPriority);
+
+  // Fallback when no recommendations trigger (user answered optimally)
+  if (adjusted.length === 0) {
+    adjusted.push({
+      id: 'maintain_excellence',
+      title: 'Maintain Your Competitive Advantage',
+      description: 'Your practice is already well-positioned across payment operations, patient experience, and financial resilience. Continue monitoring industry trends, keep your digital payment options current, and consider periodic reassessment as patient expectations evolve.',
+      category: 'Competitive Position',
+      priority: 50,
+      impact: 'medium',
+      adjustedPriority: 50,
+      financialImpact: 'Sustained revenue protection and patient retention',
+      patientPayFeature: 'Ongoing optimization and analytics',
+    });
+  }
+
   return adjusted;
 }
 
@@ -1996,7 +2003,9 @@ function calculateResiliencyIndex(answers, scores) {
     const preparedness = calculateProjectedForcePreparedness(force);
     const rawExposure = 100 - preparedness;
     // Amplifiers are reduced with PatientPay (automation reduces staff dependency, etc.)
-    const amplifier = force.amplifier ? Math.max(1.0, force.amplifier(answers) * 0.7) : 1.0;
+    // Preserve sub-1.0 amplifiers (dampeners) rather than lifting them to 1.0
+    const currentAmplifier = force.amplifier ? force.amplifier(answers) : 1.0;
+    const amplifier = currentAmplifier < 1.0 ? currentAmplifier : Math.max(1.0, currentAmplifier * 0.7);
     const amplifiedExposure = Math.min(100, Math.round(rawExposure * amplifier));
     const vulnerability = Math.round(force.weight * amplifiedExposure);
 
