@@ -336,7 +336,7 @@ const Questions = [
     min: 10,
     max: 120,
     step: 1,
-    defaultValue: 45,
+    default: 45,
     unit: ' days',
     benchmarks: {
       PP: { optimal: 35, label: 'Optimal: <35 days' },
@@ -361,7 +361,7 @@ const Questions = [
     min: 0,
     max: 80,
     step: 5,
-    defaultValue: 30,
+    default: 30,
     unit: '%',
     industryContext: 'HDHP enrollment jumped from 27% to 33% in one year. Average deductible is now $1,886. More of your revenue comes from patient wallets every year.',
   },
@@ -514,7 +514,7 @@ const Questions = [
     min: 0,
     max: 80,
     step: 5,
-    defaultValue: 10,
+    default: 10,
     unit: '%',
     scoring: function(value) {
       if (value >= 50) return 95;
@@ -2462,6 +2462,10 @@ function generatePDFReport(formData, answers, scores, insights, recommendations,
 }
 
 function downloadPDFReport(formData, answers, scores, insights, recommendations, projections) {
+  // Recalculate if not provided (UI may call with only 3 args)
+  if (!insights) insights = calculateInsights(formData, answers);
+  if (!recommendations) recommendations = getActionableRecommendations(answers, scores, insights);
+  if (!projections) projections = calculatePatientPayProjections(answers, scores);
   const doc = generatePDFReport(formData, answers, scores, insights, recommendations, projections);
   if (doc) {
     const name = formData.name || formData.organization || 'Practice';

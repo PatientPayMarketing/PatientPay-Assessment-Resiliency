@@ -503,7 +503,7 @@
       getCategoryName,
       resultsFlow,
       resultsFlowV47,
-      sources,
+      sourceCitations,
       practiceTypes,
       stats,
       industryBenchmarks,
@@ -1166,7 +1166,7 @@
               transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
             }}>
               <div className="glass-card" style={{ padding: 56 }}>
-              <h2 style={{ fontFamily: "'Archivo'", fontSize: 26, fontWeight: 700, marginBottom: 36, lineHeight: 1.4 }}>{q.question}</h2>
+              <h2 style={{ fontFamily: "'Archivo'", fontSize: 26, fontWeight: 700, marginBottom: 36, lineHeight: 1.4 }}>{q.text}</h2>
 
               {/* Slider */}
               {/* V4.10: Added defensive handling for undefined localValue during question transitions */}
@@ -3044,7 +3044,7 @@
                 return (
                   <div key={q.id} className="glass-card" style={{ padding: 24, animation: `slideInRight 0.5s ease-out ${i * 0.1}s both` }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                      <div style={{ fontSize: 15, fontWeight: 600, flex: 1, paddingRight: 20 }}>{q.question}</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, flex: 1, paddingRight: 20 }}>{q.text}</div>
                       <div style={{ fontSize: 24, fontWeight: 800, fontFamily: "'Archivo'", color: getScoreColor(qScore, segment),
                         textShadow: `0 0 20px ${getScoreColor(qScore, segment)}30` }}>{qScore}</div>
                     </div>
@@ -4117,12 +4117,12 @@
                 Sources
               </h4>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {sources.map((source, i) => (
+                {sourceCitations.map((source, i) => (
                   <span key={i} style={{
                     padding: '6px 12px', borderRadius: 100, fontSize: 12, fontWeight: 500,
                     background: 'var(--bg-tertiary)', color: 'var(--text-muted)'
                   }}>
-                    {source.name}
+                    {source.label}
                   </span>
                 ))}
               </div>
